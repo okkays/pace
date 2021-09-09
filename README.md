@@ -3,10 +3,10 @@ A pace converter with reasonable UX.
 It can:
 
 - Recognize and convert distances:
-  - [ ] mi, miles, M
-  - [ ] km, kilometers
+  - [ ] mi, mile(s), M
+  - [ ] km, kilometer(s)
   - [ ] ft, feet, foot
-  - [ ] m, meters
+  - [ ] m, meter(s)
   - Including specifiers:
     - [ ] quarter
     - [ ] half
