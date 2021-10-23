@@ -3,10 +3,10 @@ A pace converter with reasonable UX.
 It can:
 
 - Recognize and convert distances:
-  - [ ] mi, mile(s), M
-  - [ ] km, kilometer(s)
-  - [ ] ft, feet, foot
-  - [ ] m, meter(s)
+  - [x] mi, mile(s), M
+  - [x] km, kilometer(s)
+  - [x] ft, feet, foot
+  - [x] m, meter(s)
   - Including specifiers:
     - [ ] quarter
     - [ ] half
@@ -15,20 +15,19 @@ It can:
     - [ ] marathon
     - [ ] century
 - Recognize and convert durations:
-  - [ ] hour(s)
-  - [ ] minute(s)
-  - [ ] second(s)
-  - [ ] day(s)
-  - [ ] week(s)
-  - [ ] month(s)
+  - [x] hour(s)
+  - [x] minute(s)
+  - [x] second(s)
+  - [x] day(s)
+  - [x] week(s)
+  - [x] month(s)
 - Recognize and convert paces of format:
   - [ ] min/km, min per km
-  - [ ] mph
-- Convert pace to:
+  - [ ] mph, miles per hour
+  - [ ] m per m easter egg
+- Convert pace to formats of:
   - [ ] min/km
-  - [ ] min/mi
   - [ ] mph
-  - [ ] kph
 - Convert efforts:
   - [ ] Find distance given pace and duration
   - [ ] Find duration given distance and pace

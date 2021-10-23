@@ -1,4 +1,5 @@
 import { Distance, parseDistance } from './distance';
+import {InvalidMetric} from './metric';
 
 describe('Distance', () => {
   it('Should recognize distances', () => {
@@ -25,12 +26,29 @@ describe('Distance', () => {
     expect(parseDistance('3 feet')).toEqual(new Distance(3, 'foot'));
   });
 
-  it('Should convert distances', () => {
-    const fromDistance = new Distance(3, 'foot');
-    expect(fromDistance.toUnit('meter')).toBeCloseTo(0.9, 1);
-    expect(fromDistance.toUnit('foot')).toBeCloseTo(3, 1);
-    expect(fromDistance.toUnit('kilometer')).toBeCloseTo(0.0009, 4);
-    expect(fromDistance.toUnit('mile')).toBeCloseTo(0.001, 3);
+  it('Should handle invalid units', () => {
+    expect(parseDistance('3 foos')).toEqual(new InvalidMetric(3, null));
   });
+
+  it('Should handle valueless Distances', () => {
+    expect(parseDistance('miles')).toEqual(new Distance(null, 'mile'));
+  });
+
+  it('Should convert distance values', () => {
+    const fromDistance = new Distance(3, 'foot');
+    expect(fromDistance.toUnit('meter').value).toBeCloseTo(0.9, 1);
+    expect(fromDistance.toUnit('foot').value).toBeCloseTo(3, 1);
+    expect(fromDistance.toUnit('kilometer').value).toBeCloseTo(0.0009, 4);
+    expect(fromDistance.toUnit('mile').value).toBeCloseTo(0.001, 3);
+  });
+
+  it('Should convert distance units', () => {
+    const fromDistance = new Distance(3, 'foot');
+    expect(fromDistance.toUnit('meter').unit).toBe('meter');
+    expect(fromDistance.toUnit('foot').unit).toBe('foot');
+    expect(fromDistance.toUnit('kilometer').unit).toBe('kilometer');
+    expect(fromDistance.toUnit('mile').unit).toBe('mile');
+  });
+
 
 });

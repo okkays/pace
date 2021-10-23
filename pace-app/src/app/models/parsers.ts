@@ -1,16 +1,18 @@
-import {Distance, parseDistance} from "./distance";
-import {Metric} from "./metric";
+import {parseDistance} from "./distance";
+import {parseDuration} from "./duration";
+import {InvalidMetric, Metric} from "./metric";
 
-export class Parsers {
-}
-
-export function parseMetric(metric: string): Metric|null {
+// TODO: Reconsider this interface. Doesn't work for minutes vs meters as mm
+export function parseMetric(metric: string): Metric|InvalidMetric {
   const cleanedMetric = clean(metric);
 
   const maybeDistance = parseDistance(cleanedMetric);
-  if (maybeDistance) return maybeDistance;
+  if (maybeDistance.isValid()) return maybeDistance;
 
-  return null;
+  const maybeDuration = parseDuration(cleanedMetric);
+  if (maybeDuration.isValid()) return maybeDuration;
+
+  return maybeDuration;
 }
 
 function clean(metric: string): string {
