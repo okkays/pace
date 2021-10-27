@@ -1,4 +1,4 @@
-import {MaybeMetric} from './metric';
+import {MaybeMetric, Metric} from './metric';
 
 abstract class MetricMatcher implements jasmine.CustomMatcher {
   compare(

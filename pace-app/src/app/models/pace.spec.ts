@@ -18,9 +18,7 @@ describe('Pace', () => {
 });
 
 describe('parsePace', () => {
-  beforeEach(() => {
-    addMetricMatchers();
-  });
+  beforeEach(addMetricMatchers);
 
   it('parses a single-value pace', () => {
     (expect(parsePace('5 min/km')) as any).toBeMetric(5, 'minute/kilometer');

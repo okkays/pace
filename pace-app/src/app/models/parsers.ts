@@ -1,16 +1,21 @@
-import {parseDistance} from "./distance";
-import {parseDuration} from "./duration";
-import {InvalidMetric, Metric} from "./metric";
+import {parseDistance} from './distance';
+import {parseDuration} from './duration';
+import {InvalidMetric, Metric} from './metric';
+import {parsePace} from './pace';
 
-// TODO: Reconsider this interface. Doesn't work for minutes vs meters as mm
-export function parseMetric(metric: string): Metric|InvalidMetric {
+export function parseMetrics(metric: string): Metric[]|InvalidMetric {
   const cleanedMetric = clean(metric);
 
+  const maybePace = parsePace(cleanedMetric);
   const maybeDistance = parseDistance(cleanedMetric);
-  if (maybeDistance.isValid()) return maybeDistance;
-
   const maybeDuration = parseDuration(cleanedMetric);
-  if (maybeDuration.isValid()) return maybeDuration;
+
+  if (maybePace.isValid()) return [maybePace];
+
+  const validMetrics = [];
+  if (maybeDistance.isValid()) validMetrics.push(maybeDistance);
+  if (maybeDuration.isValid()) validMetrics.push(maybeDuration);
+  if (validMetrics.length) return validMetrics;
 
   return maybeDuration;
 }
@@ -20,5 +25,6 @@ function clean(metric: string): string {
 }
 
 function removeWhitespace(metric: string): string {
-  return metric.trim().replace(/\s?\/\s?/g, '/'); // Remove spaces around '/' for ratios.
+  return metric.trim().replace(
+      /\s?\/\s?/g, '/');  // Remove spaces around '/' for ratios.
 }
