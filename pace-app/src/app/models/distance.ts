@@ -17,7 +17,7 @@ export class Distance extends Metric {
     throw new Error(`Unexpected unit: ${this.unit}`);
   }
 
-  toUnit(target: DistanceUnit): Distance {
+  toUnit(target: DistanceUnit): Distance|InvalidMetric {
     const valueInMeters = this.getValueInMeters();
     if (valueInMeters === null) return new Distance(null, target);
     if (target === 'meter') {
@@ -32,7 +32,7 @@ export class Distance extends Metric {
     if (target === 'mile') {
       return new Distance(valueInMeters * 0.00062137119, 'mile');
     }
-    throw new Error(`Unexpected unit: ${target}`);
+    return new InvalidMetric(this.value, target);
   }
 }
 

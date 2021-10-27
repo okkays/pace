@@ -19,7 +19,7 @@ export class Duration extends Metric {
     throw new Error(`Unexpected unit: ${this.unit}`);
   }
 
-  toUnit(target: DurationUnit): Duration {
+  toUnit(target: DurationUnit): Duration|InvalidMetric {
     const valueInSeconds = this.getValueInSeconds();
     if (valueInSeconds === null) return new Duration(null, target);
     if (target === 'second') {
@@ -40,7 +40,7 @@ export class Duration extends Metric {
     if (target === 'month') {
       return new Duration(valueInSeconds / (60 * 60 * 24 * 7 * 30.5), 'month');
     }
-    throw new Error(`Unexpected unit: ${target}`);
+    return new InvalidMetric(this.value, target);
   }
 }
 

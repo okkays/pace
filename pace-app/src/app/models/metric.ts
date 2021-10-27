@@ -1,7 +1,7 @@
 export abstract class Metric {
   abstract readonly value: number|null;
   abstract readonly unit: string;
-  abstract toUnit(target: string): Metric;
+  abstract toUnit(target: string): Metric|InvalidMetric;
   isValid(): this is Metric {
     return true;
   }
@@ -16,3 +16,5 @@ export class InvalidMetric {
     return false;
   }
 }
+
+export type MaybeMetric = Metric|InvalidMetric;
