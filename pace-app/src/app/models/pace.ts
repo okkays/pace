@@ -3,12 +3,39 @@ import {Duration, parseDuration} from './duration';
 import {InvalidMetric, Metric} from './metric';
 
 type PaceMetric = Distance|Duration;
-type Separator = '/'|' per ';
+type Separator = '/'|' per '|'p';
+const P_REGEX = /^(?<value>[^A-Za-z]*)(?<distance>[km])p(?<duration>[wdhms])$/
 
 function getSeparator(rawPace: string): Separator|null {
   if (rawPace.includes('/')) return '/';
   if (rawPace.includes(' per ')) return ' per ';
   return null;
+}
+
+function parseSpecialPace(rawPace: string): Pace|InvalidMetric {
+  const pMatch = rawPace.match(P_REGEX);
+  const pGroups = pMatch?.groups;
+  if (!pGroups) return new InvalidMetric(null, null);
+  const value = pGroups['value'];
+  const rawDistance = pGroups['distance'];
+  let distance: Distance|InvalidMetric;
+  switch (rawDistance) {
+    case 'k':
+      distance = parseDistance(value + 'kilometer');
+      break;
+    case 'm':
+      distance = parseDistance(value + 'mile');
+      break;
+    default:
+      return new InvalidMetric(null, null);
+  }
+  if (!distance.isValid()) return new InvalidMetric(null, null);
+
+  const rawDuration = pGroups['duration'];
+  const duration = parseDuration(rawDuration);
+  if (!duration.isValid()) return new InvalidMetric(null, null);
+
+  return new Pace(distance, 'p', duration);
 }
 
 /**
@@ -18,6 +45,9 @@ function getSeparator(rawPace: string): Separator|null {
  * distance or duration;
  */
 export function parsePace(rawPace: string): Pace|InvalidMetric {
+  const maybeSpecialPace = parseSpecialPace(rawPace);
+  if (maybeSpecialPace.isValid()) return maybeSpecialPace;
+
   const separator = getSeparator(rawPace);
   if (separator === null) return new InvalidMetric(null, null);
 
@@ -92,7 +122,11 @@ export class Pace extends Metric {
   ) {
     super();
     this.value = getValue(left.value, right.value);
-    this.unit = [this.left.unit, this.right.unit].join(this.separator);
+    if (this.separator === 'p') {
+      this.unit = `${this.left.unit.charAt(0)}p${this.right.unit.charAt(0)}`;
+    } else {
+      this.unit = [this.left.unit, this.right.unit].join(this.separator);
+    }
   }
 
   /**

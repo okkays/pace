@@ -23,10 +23,10 @@ It can:
   - [x] month(s)
 - Recognize and convert paces of format:
   - [x] min/km, min per km
-  - [ ] mph
+  - [x] mph
 - Convert pace to formats of:
   - [x] min/km
-  - [ ] mph
+  - [x] mph
 - Convert efforts:
   - [ ] Find distance given pace and duration
   - [ ] Find duration given distance and pace

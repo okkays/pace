@@ -64,10 +64,12 @@ function parseUnit(metric: string): DurationUnit|null {
   if (metric.match(/^[^A-Za-z]*hrs?$/)) return 'hour';
   if (metric.match(/^[^A-Za-z]*hs?$/)) return 'hour';
 
+  if (metric.match(/^[^A-Za-z]*d?$/)) return 'day';
   if (metric.match(/^[^A-Za-z]*days?$/)) return 'day';
 
   if (metric.match(/^[^A-Za-z]*weeks?$/)) return 'week';
   if (metric.match(/^[^A-Za-z]*wks?$/)) return 'week';
+  if (metric.match(/^[^A-Za-z]*w?$/)) return 'week';
 
   if (metric.match(/^[^A-Za-z]*months?$/)) return 'month';
 

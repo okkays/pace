@@ -18,3 +18,8 @@ export class InvalidMetric {
 }
 
 export type MaybeMetric = Metric|InvalidMetric;
+
+export function assertValid<T extends Metric>(metric: T|InvalidMetric): T {
+  if (!metric.isValid()) throw new TypeError('Metric must be valid');
+  return metric;
+}

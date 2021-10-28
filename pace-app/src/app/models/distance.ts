@@ -32,7 +32,7 @@ export class Distance extends Metric {
     if (target === 'mile') {
       return new Distance(valueInMeters * 0.00062137119, 'mile');
     }
-    return new InvalidMetric(this.value, target);
+    return new InvalidMetric(valueInMeters, target);
   }
 }
 

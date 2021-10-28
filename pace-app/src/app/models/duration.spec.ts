@@ -1,8 +1,9 @@
-import { Duration, parseDuration } from './duration';
+import {Duration, parseDuration} from './duration';
 
 describe('Duration', () => {
   it('Should recognize durations', () => {
-    expect(parseDuration('1323.03 seconds')).toEqual(new Duration(1323.03, 'second'));
+    expect(parseDuration('1323.03 seconds'))
+        .toEqual(new Duration(1323.03, 'second'));
 
     expect(parseDuration('0 s')).toEqual(new Duration(0, 'second'));
     expect(parseDuration('0 sec')).toEqual(new Duration(0, 'second'));
@@ -23,9 +24,11 @@ describe('Duration', () => {
     expect(parseDuration('0 hrs')).toEqual(new Duration(0, 'hour'));
     expect(parseDuration('0 hs')).toEqual(new Duration(0, 'hour'));
 
+    expect(parseDuration('0 d')).toEqual(new Duration(0, 'day'));
     expect(parseDuration('0 day')).toEqual(new Duration(0, 'day'));
     expect(parseDuration('0 days')).toEqual(new Duration(0, 'day'));
 
+    expect(parseDuration('0 w')).toEqual(new Duration(0, 'week'));
     expect(parseDuration('0 week')).toEqual(new Duration(0, 'week'));
     expect(parseDuration('0 weeks')).toEqual(new Duration(0, 'week'));
 
@@ -61,5 +64,4 @@ describe('Duration', () => {
     expect(fromDuration.toUnit('week').unit).toBe('week');
     expect(fromDuration.toUnit('month').unit).toBe('month');
   });
-
 });

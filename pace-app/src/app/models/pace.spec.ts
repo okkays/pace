@@ -1,6 +1,7 @@
 import {Distance} from './distance';
 import {Duration} from './duration';
 import {addMetricMatchers} from './matchers';
+import {assertValid} from './metric';
 import {Pace, parsePace} from './pace';
 
 const TEN_MINS = new Duration(10, 'minute');
@@ -25,6 +26,11 @@ describe('Pace', () => {
     (expect(TEN_MINS_PER_MILE.toUnit('mi/h')) as any)
         .toBeMetric(6, 'mile/hour');
   });
+
+  it('converts to *p*', () => {
+    (expect(TEN_MINS_PER_MILE.toUnit('mph')) as any).toBeMetric(6, 'mph');
+  });
+
 
   it('converts distances', () => {
     (expect(TEN_MINS_PER_MILE.toUnit('min/km')) as any)
@@ -57,6 +63,21 @@ describe('parsePace', () => {
 
   it('parses a single-value pace', () => {
     (expect(parsePace('5 min/km')) as any).toBeMetric(5, 'minute/kilometer');
+  });
+
+  it('recognizes mph and kph', () => {
+    (expect(parsePace('5 kph')) as any).toBeMetric(5, 'kph');
+    (expect(parsePace('5 mph')) as any).toBeMetric(5, 'mph');
+  });
+
+  it('recognizes units of [km]p[wdhms]', () => {
+    expect(assertValid(parsePace('5 kph')).left.unit).toBe('kilometer');
+    expect(assertValid(parsePace('5 mph')).left.unit).toBe('mile');
+    expect(assertValid(parsePace('5 mpw')).right.unit).toBe('week');
+    expect(assertValid(parsePace('5 mpd')).right.unit).toBe('day');
+    expect(assertValid(parsePace('5 mph')).right.unit).toBe('hour');
+    expect(assertValid(parsePace('5 mpm')).right.unit).toBe('minute');
+    expect(assertValid(parsePace('5 mps')).right.unit).toBe('second');
   });
 
   it('parses a two-valued pace', () => {
