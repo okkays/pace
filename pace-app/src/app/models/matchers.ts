@@ -10,7 +10,8 @@ abstract class MetricMatcher implements jasmine.CustomMatcher {
         message: `Expected unit ${expectedUnit}, but got: ${actual.unit}`,
       };
     }
-    if (actual.value != expectedValue) {
+    // The precision here is arbitrary :shrug:
+    if (Number(actual.value).toFixed(5) != Number(expectedValue).toFixed(5)) {
       return {
         pass: false,
         message: `Expected value ${expectedValue}, but got: ${actual.value}`,

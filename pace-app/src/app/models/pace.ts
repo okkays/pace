@@ -95,11 +95,50 @@ export class Pace extends Metric {
     this.unit = [this.left.unit, this.right.unit].join(this.separator);
   }
 
+  /**
+   * Transforms this pace into another pace, which may invole:
+   * - swapping ratio (min/km to km/min)
+   * - changing distance unit (km to mi)
+   * - changing duration unit (min to hr)
+   */
   toUnit(target: string): Metric|InvalidMetric {
     const targetPace = parsePace(target);
-    if (!targetPace.isValid()) return targetPace;
-    throw new Error('Method not implemented.');
+    if (!targetPace.isValid()) return new InvalidMetric(null, null);
+    if (targetPace.value !== null) return new InvalidMetric(null, null);
+    if (this.value === null) return targetPace;
+
+    let originalLeft = this.left;
+    let originalRight = this.right;
+
+    const isSwap =
+        ((targetPace.left instanceof Duration &&
+          !(originalLeft instanceof Duration)) ||
+         (targetPace.left instanceof Distance &&
+          !(originalLeft instanceof Distance)));
+
+    if (isSwap) {
+      [originalLeft, originalRight] = [originalRight, originalLeft];
+    }
+
+    const left = convertPaceMetric(originalLeft, targetPace.left);
+    const right = convertPaceMetric(originalRight, targetPace.right);
+
+    if (!left.isValid() || !right.isValid()) {
+      return new InvalidPace(left, this.separator, right);
+    }
+
+    return new Pace(left, targetPace.separator, right);
   }
+}
+
+function convertPaceMetric(original: PaceMetric, target: PaceMetric) {
+  if (original instanceof Distance && target instanceof Distance) {
+    return original.toUnit(target.unit);
+  }
+  if (original instanceof Duration && target instanceof Duration) {
+    return original.toUnit(target.unit);
+  }
+  return new InvalidMetric(null, null);
 }
 
 export class InvalidPace extends InvalidMetric {

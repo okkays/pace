@@ -3,17 +3,52 @@ import {Duration} from './duration';
 import {addMetricMatchers} from './matchers';
 import {Pace, parsePace} from './pace';
 
-const FIVE_MINUTES = new Duration(5, 'minute');
-const TWO_KILOMETERS = new Distance(2, 'kilometer');
+const TEN_MINS = new Duration(10, 'minute');
+const ONE_MILE = new Distance(1, 'mile');
+const TWO_KMS = new Distance(2, 'kilometer');
+const TEN_MINS_PER_MILE = new Pace(TEN_MINS, '/', ONE_MILE);
+const KMS_PER_MIN = new Pace(
+    new Distance(null, 'kilometer'), '/', new Duration(null, 'minute'));
 
 describe('Pace', () => {
+  beforeEach(addMetricMatchers);
+
   it('has a value of left over right', () => {
-    expect(new Pace(FIVE_MINUTES, '/', TWO_KILOMETERS).value).toBe(2.5);
+    expect(new Pace(TEN_MINS, '/', TWO_KMS).value).toBe(5);
   });
 
   it('has a unit of left seperator right', () => {
-    expect(new Pace(FIVE_MINUTES, '/', TWO_KILOMETERS).unit)
-        .toBe('minute/kilometer');
+    expect(new Pace(TEN_MINS, '/', TWO_KMS).unit).toBe('minute/kilometer');
+  });
+
+  it('converts distance/duration to duration/distance', () => {
+    (expect(TEN_MINS_PER_MILE.toUnit('mi/h')) as any)
+        .toBeMetric(6, 'mile/hour');
+  });
+
+  it('converts distances', () => {
+    (expect(TEN_MINS_PER_MILE.toUnit('min/km')) as any)
+        .toBeMetric(6.213712, 'minute/kilometer');
+  });
+
+  it('converts durations', () => {
+    (expect(TEN_MINS_PER_MILE.toUnit('secs/mi')) as any)
+        .toBeMetric(10 * 60, 'second/mile');
+  });
+
+  it('handles invalid conversions', () => {
+    (expect(TEN_MINS_PER_MILE.toUnit('mi')) as any)
+        .toBeInvalidMetric(null, null);
+  });
+
+  it('handles valueless conversions', () => {
+    (expect(KMS_PER_MIN.toUnit('min/mi')) as any)
+        .toBeMetric(null, 'minute/mile');
+  });
+
+  it('balks at conversions to values', () => {
+    (expect(KMS_PER_MIN.toUnit('5 min/mi')) as any)
+        .toBeInvalidMetric(null, null);
   });
 });
 

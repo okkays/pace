@@ -22,11 +22,10 @@ It can:
   - [x] week(s)
   - [x] month(s)
 - Recognize and convert paces of format:
-  - [ ] min/km, min per km
-  - [ ] mph, miles per hour
-  - [ ] m per m easter egg
+  - [x] min/km, min per km
+  - [ ] mph
 - Convert pace to formats of:
-  - [ ] min/km
+  - [x] min/km
   - [ ] mph
 - Convert efforts:
   - [ ] Find distance given pace and duration
