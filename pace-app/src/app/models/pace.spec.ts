@@ -31,7 +31,6 @@ describe('Pace', () => {
     (expect(TEN_MINS_PER_MILE.toUnit('mph')) as any).toBeMetric(6, 'mph');
   });
 
-
   it('converts distances', () => {
     (expect(TEN_MINS_PER_MILE.toUnit('min/km')) as any)
         .toBeMetric(6.213712, 'minute/kilometer');
