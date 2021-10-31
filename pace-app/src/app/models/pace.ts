@@ -1,6 +1,7 @@
 import {abbreviateDistance, Distance, DISTANCES, parseDistance, pluralizeDistance} from './distance';
 import {abbreviateDuration, Duration, DURATIONS, parseDuration, pluralizeDuration} from './duration';
 import {InvalidMetric, Metric} from './metric';
+import {getHms, getMs} from './util';
 
 type PaceMetric = Distance|Duration;
 
@@ -163,9 +164,20 @@ export class Pace extends Metric {
     }
   }
 
+  private getStringValue(): string {
+    if (this.value === null) return '';
+    if (this.left.unit === 'minute') {
+      return getMs(this.value) + ' ';
+    }
+    if (this.left.unit === 'hour') {
+      return getHms(this.value) + ' ';
+    }
+    return String(this.value) + ' ';
+  }
+
   toString(): string {
     const unit = this.isPlural() ? pluralizePace(this.unit) : this.unit;
-    const value = this.value === null ? '' : `${this.value} `;
+    const value = this.getStringValue();
     return `${value}${unit}`;
   }
 

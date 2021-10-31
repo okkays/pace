@@ -27,7 +27,7 @@ describe('Pace', () => {
         .toBeMetric(6, 'mile/hour');
 
     expect((parsePace('6 kph') as Pace).toUnit('min/km').toString())
-        .toBe('10 minutes/kilometer');
+        .toBe('10:00 minutes/kilometer');
 
     expect((parsePace('6 kph') as Pace).toUnit('sec/km').toString())
         .toBe('600 seconds/kilometer');
@@ -48,6 +48,12 @@ describe('Pace', () => {
   it('converts durations', () => {
     (expect(TEN_MINS_PER_MILE.toUnit('secs/mi')) as any)
         .toBeMetric(10 * 60, 'second/mile');
+
+    expect((parsePace('5.5 kph') as Pace).toUnit('min/km').toString())
+        .toBe('10:55 minutes/kilometer');
+
+    expect((parsePace('0.012 kph') as Pace).toUnit('hour/km').toString())
+        .toBe('01:23:20 hours/kilometer');
   });
 
   it('handles invalid conversions', () => {
