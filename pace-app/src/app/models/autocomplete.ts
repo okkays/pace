@@ -1,8 +1,8 @@
 import {EventEmitter} from '@angular/core';
 import {map, MonoTypeOperatorFunction, OperatorFunction, pipe, tap} from 'rxjs';
 
-import {Distance, DISTANCES, pluralizeDistance} from './distance';
-import {Duration, DURATIONS, pluralizeDuration} from './duration';
+import {abbreviateDistance, Distance, DISTANCES, pluralizeDistance} from './distance';
+import {abbreviateDuration, Duration, DURATIONS, pluralizeDuration} from './duration';
 import {InvalidMetric, Metric} from './metric';
 import {Pace, PACES, pluralizePace} from './pace';
 
@@ -15,24 +15,27 @@ export function getMetricOptions(metric: Metric|InvalidMetric): string[] {
   if (!metric.isValid() || metric instanceof Duration) {
     options.push(...getDurationOptions(metric));
   }
-  if (!metric.isValid() || metric instanceof Pace) {
-    options.push(...getPaceOptions(metric));
-  }
+  options.push(...getPaceOptions(metric));
+
   return options;
 }
 
 function getDistanceOptions(metric: Distance|InvalidMetric): string[] {
+  const distances = DISTANCES.map(abbreviateDistance).flat();
+
   if (metric.isPlural()) {
-    return DISTANCES.map(distance => pluralizeDistance(distance));
+    return distances.map(distance => pluralizeDistance(distance));
   }
-  return [...DISTANCES];
+  return [...distances];
 }
 
 function getDurationOptions(metric: Duration|InvalidMetric): string[] {
+  const durations = DURATIONS.map(abbreviateDuration).flat();
+
   if (metric.isPlural()) {
-    return DURATIONS.map(duration => pluralizeDuration(duration));
+    return durations.map(duration => pluralizeDuration(duration));
   }
-  return [...DURATIONS];
+  return [...durations];
 }
 
 function getPaceOptions(metric: Pace|InvalidMetric): string[] {

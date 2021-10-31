@@ -8,13 +8,25 @@ export const DISTANCES = [
   'kilometer',
 ] as const;
 
+const ABBREVIATIONS: Record<DistanceUnit, string[]> = {
+  'mile': ['mi', 'mile'],
+  'kilometer': ['km', 'kilometer'],
+  'meter': ['m', 'meter'],
+  'foot': ['ft', 'foot'],
+};
+
+export function abbreviateDistance(metric: DistanceUnit): string[] {
+  return [...ABBREVIATIONS[metric]];
+}
+
 type DistanceUnit = typeof DISTANCES[number];
 
 export function depluralizeDistance(metric: string): string {
   return metric.replace(/feet/g, 'foot').replace(/s$/, '');
 }
 
-export function pluralizeDistance(metric: DistanceUnit): string {
+export function pluralizeDistance(metric: string): string {
+  if (['mi', 'ft', 'm', 'km'].includes(metric)) return metric;
   if (metric === 'foot') return 'feet';
   return metric + 's';
 }

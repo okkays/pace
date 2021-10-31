@@ -1,5 +1,5 @@
-import {Distance, DISTANCES, parseDistance, pluralizeDistance} from './distance';
-import {Duration, DURATIONS, parseDuration, pluralizeDuration} from './duration';
+import {abbreviateDistance, Distance, DISTANCES, parseDistance, pluralizeDistance} from './distance';
+import {abbreviateDuration, Duration, DURATIONS, parseDuration, pluralizeDuration} from './duration';
 import {InvalidMetric, Metric} from './metric';
 
 type PaceMetric = Distance|Duration;
@@ -8,8 +8,8 @@ export const PACES: string[] = [];
 
 const PLURAL_PACES = new Map<string, string>();
 
-for (const distance of DISTANCES) {
-  for (const duration of DURATIONS) {
+for (const distance of DISTANCES.map(abbreviateDistance).flat()) {
+  for (const duration of DURATIONS.map(abbreviateDuration).flat()) {
     for (const separator of ['/', ' per ']) {
       const distanceFirst = `${distance}${separator}${duration}`;
       const distanceFirstPlural =

@@ -10,13 +10,27 @@ export const DURATIONS = [
   'month',
 ] as const;
 
+const ABBREVIATIONS: Record<DurationUnit, string[]> = {
+  'second': ['second', 'sec', 's'],
+  'minute': ['minute', 'min', 'm'],
+  'hour': ['hour', 'hr', 'h'],
+  'day': ['d', 'day'],
+  'week': ['week', 'wk', 'w'],
+  'month': ['month'],
+};
+
+export function abbreviateDuration(metric: DurationUnit): string[] {
+  return [...ABBREVIATIONS[metric]];
+}
+
 type DurationUnit = typeof DURATIONS[number];
 
 export function depluralizeDuration(metric: string): string {
   return metric.replace(/s$/, '');
 }
 
-export function pluralizeDuration(metric: DurationUnit): string {
+export function pluralizeDuration(metric: string): string {
+  if (['w', 'h', 'd', 's', 'm'].includes(metric)) return metric;
   return metric + 's';
 }
 

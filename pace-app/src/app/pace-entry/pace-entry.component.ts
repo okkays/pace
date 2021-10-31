@@ -56,6 +56,9 @@ export class PaceEntryComponent implements OnInit {
           };
         }),
         searchOptions(),
+        map(searched => {
+          return {...searched, results: searched.results.slice(0, 50)};
+        }),
         selectResult(this.metricsSelected),
         map(result => result.results),
     );
