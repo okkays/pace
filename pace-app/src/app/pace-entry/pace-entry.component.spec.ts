@@ -1,12 +1,13 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatAutocompleteHarness} from '@angular/material/autocomplete/testing';
-import {MatOptionHarness, OptionHarnessFilters} from '@angular/material/core/testing';
-import {firstValueFrom} from 'rxjs';
-import {shareReplay} from 'rxjs/operators';
+import {MatOptionHarness} from '@angular/material/core/testing';
+import {firstValueFrom, lastValueFrom} from 'rxjs';
+import {shareReplay, take} from 'rxjs/operators';
 
 import {createTestEnvironment, setupModule} from '../component-testing-util';
 
 import {PaceEntryComponent} from './pace-entry.component';
+
+
 
 async function getActionState() {
   const {fixture, loader} = createTestEnvironment(PaceEntryComponent);
@@ -82,11 +83,39 @@ describe('ActionSelectorComponent', () => {
     expect(await getOptionTexts(await harness.getOptions())).toEqual([]);
   });
 
-  //   it('should emit selected options', async () => {
-  //     const {harness, actionSelected$} = await getActionState();
+  it('should emit selected distances', async () => {
+    const {harness, actionSelected$} = await getActionState();
 
-  //     await harness.selectOption({text: 'Convert'});
+    await harness.enterText('5 ft');
+    await harness.selectOption({text: '5 ft'});
+    const metrics = await firstValueFrom(actionSelected$);
 
-  //     expect(await firstValueFrom(actionSelected$)).toBe('Convert');
-  //   });
+    expect(metrics).toHaveSize(1);
+    expect(metrics[0].unit).toBe('foot');
+    expect(metrics[0].value).toBe(5);
+  });
+
+  it('should emit selected durations', async () => {
+    const {harness, actionSelected$} = await getActionState();
+
+    await harness.enterText('5 hours');
+    await harness.selectOption({text: '5 hours'});
+    const metrics = await firstValueFrom(actionSelected$);
+
+    expect(metrics).toHaveSize(1);
+    expect(metrics[0].unit).toBe('hour');
+    expect(metrics[0].value).toBe(5);
+  });
+
+  it('should emit selected paces', async () => {
+    const {harness, actionSelected$} = await getActionState();
+
+    await harness.enterText('5 km/hour');
+    await harness.selectOption({text: '5 km/hour'});
+    const metrics = await lastValueFrom(actionSelected$.pipe(take(2)));
+
+    expect(metrics).toHaveSize(1);
+    expect(metrics[0].unit).toBe('kilometer/hour');
+    expect(metrics[0].value).toBe(5);
+  });
 });

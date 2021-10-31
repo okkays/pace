@@ -18,7 +18,7 @@ describe('Pace', () => {
     expect(new Pace(TEN_MINS, '/', TWO_KMS).value).toBe(5);
   });
 
-  it('has a unit of left seperator right', () => {
+  it('has a unit of left separator right', () => {
     expect(new Pace(TEN_MINS, '/', TWO_KMS).unit).toBe('minute/kilometer');
   });
 

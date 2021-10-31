@@ -117,7 +117,7 @@ export function selectResult<T>(output: EventEmitter<T>):
     console.log(results, selectedItem, selectedItemAsString);
     if (!selectedItemAsString || !selectedItem) return;
     if (!results.includes(selectedItemAsString)) return;
-    console.log(`Selecting: ${selectedItem}`);
+    console.log('Selecting:', selectedItem);
     output.next(selectedItem);
   }));
 }
