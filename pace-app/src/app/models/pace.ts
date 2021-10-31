@@ -1,8 +1,42 @@
-import {Distance, parseDistance} from './distance';
-import {Duration, parseDuration} from './duration';
+import {Distance, DISTANCES, parseDistance, pluralizeDistance} from './distance';
+import {Duration, DURATIONS, parseDuration, pluralizeDuration} from './duration';
 import {InvalidMetric, Metric} from './metric';
 
 type PaceMetric = Distance|Duration;
+
+export const PACES: string[] = [];
+
+const PLURAL_PACES = new Map<string, string>();
+
+for (const distance of DISTANCES) {
+  for (const duration of DURATIONS) {
+    for (const separator of ['/', ' per ']) {
+      const distanceFirst = `${distance}${separator}${duration}`;
+      const distanceFirstPlural =
+          `${pluralizeDistance(distance)}${separator}${duration}`;
+      const durationFirst = `${duration}${separator}${distance}`;
+      const durationFirstPlural =
+          `${pluralizeDuration(duration)}${separator}${distance}`;
+      PACES.push(distanceFirst);
+      PACES.push(durationFirst);
+      PLURAL_PACES.set(distanceFirst, distanceFirstPlural);
+      PLURAL_PACES.set(durationFirst, durationFirstPlural);
+    }
+  }
+}
+
+for (const specialDistance of ['k', 'm']) {
+  for (const specialDuration of ['w', 'd', 'h', 'm', 's']) {
+    const specialPace = `${specialDistance}p${specialDuration}`;
+    PACES.push(specialPace);
+    PLURAL_PACES.set(specialPace, specialPace);
+  }
+}
+
+export function pluralizePace(metric: string): string|null {
+  return PLURAL_PACES.get(metric) || null;
+}
+
 type Separator = '/'|' per '|'p';
 const P_REGEX = /^(?<value>[^A-Za-z]*)(?<distance>[km])p(?<duration>[wdhms])$/
 
@@ -52,15 +86,15 @@ export function parsePace(rawPace: string): Pace|InvalidMetric {
   if (separator === null) return new InvalidMetric(null, null);
 
   const [left, right] = rawPace.split(separator, 2);
-  // Because of the bit math below, the compiler can't tell if the following are
-  // valid or invalid. We cast because we can tell:
+  // Because of the bit math below, the compiler can't tell if the following
+  // are valid or invalid. We cast because we can tell:
   const leftAsDistance = parseDistance(left) as Distance;
   const leftAsDuration = parseDuration(left) as Duration;
   const rightAsDistance = parseDistance(right) as Distance;
   const rightAsDuration = parseDuration(right) as Duration;
 
-  // Represent whether distance/duration is valid as binary to be able to switch
-  // on them easier.
+  // Represent whether distance/duration is valid as binary to be able to
+  // switch on them easier.
   const states: number =
       (Number(leftAsDistance.isValid()) << 3 |
        Number(leftAsDuration.isValid()) << 2 |

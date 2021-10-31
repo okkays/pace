@@ -1,18 +1,18 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {MonoTypeOperatorFunction, Observable, OperatorFunction, pipe} from 'rxjs';
-import {map, startWith, tap} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
 
 import {Action, ACTIONS, isAction} from '../models/action';
+import {buildSearchArgs, searchOptions, SearchResult, selectResult} from '../models/autocomplete';
 
 
-function search(options: readonly string[]):
-    OperatorFunction<string, string[]> {
-  return pipe(map(term => {
-    const lowerTerm = term.toLowerCase();
-    return options.filter(option => option.toLowerCase().includes(lowerTerm));
-  }));
+function isActionResult(result: SearchResult<string>):
+    result is SearchResult<Action> {
+  if (!result.selectedItem) return false;
+  return isAction(result.selectedItem);
 }
+
 
 @Component({
   selector: 'app-action-selector',
@@ -28,13 +28,10 @@ export class ActionSelectorComponent implements OnInit {
   ngOnInit() {
     this.filteredOptions = this.actionControl.valueChanges.pipe(
         startWith(''),
-        this.select,
-        search(ACTIONS),
+        buildSearchArgs(ACTIONS),
+        searchOptions(),
+        selectResult(this.actionSelected),
+        map(({results}) => results),
     );
   }
-
-  private readonly select: MonoTypeOperatorFunction<string> = pipe(tap(term => {
-    if (!isAction(term)) return;
-    this.actionSelected.next(term);
-  }));
 }

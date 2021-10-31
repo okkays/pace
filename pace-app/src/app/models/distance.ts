@@ -1,7 +1,23 @@
 import {InvalidMetric, Metric} from './metric';
 import {parseValue} from './util';
 
-type DistanceUnit = 'mile'|'kilometer'|'meter'|'foot';
+export const DISTANCES = [
+  'foot',
+  'mile',
+  'meter',
+  'kilometer',
+] as const;
+
+type DistanceUnit = typeof DISTANCES[number];
+
+export function depluralizeDistance(metric: string): string {
+  return metric.replace(/feet/g, 'foot').replace(/s$/, '');
+}
+
+export function pluralizeDistance(metric: DistanceUnit): string {
+  if (metric === 'foot') return 'feet';
+  return metric + 's';
+}
 
 export class Distance extends Metric {
   constructor(readonly value: number|null, readonly unit: DistanceUnit) {
@@ -44,7 +60,7 @@ export function parseDistance(metric: string): Distance|InvalidMetric {
 }
 
 function parseUnit(metric: string): DistanceUnit|null {
-  metric = depluralize(metric);
+  metric = depluralizeDistance(metric);
 
   if (metric.endsWith('mi')) return 'mile';
   if (metric.endsWith('mile')) return 'mile';
@@ -59,8 +75,4 @@ function parseUnit(metric: string): DistanceUnit|null {
   if (metric.endsWith('foot')) return 'foot';
 
   return null;
-}
-
-function depluralize(metric: string): string {
-  return metric.replace(/feet/g, 'foot').replace(/s$/, '');
 }

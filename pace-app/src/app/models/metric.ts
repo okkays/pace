@@ -1,14 +1,24 @@
-export abstract class Metric {
+export abstract class BaseMetric {
   abstract readonly value: number|null;
-  abstract readonly unit: string;
+  abstract readonly unit: string|null;
+  abstract isValid(): this is Metric;
+
+  isPlural(): boolean {
+    return this.value !== 1;
+  }
+}
+
+export abstract class Metric extends BaseMetric {
   abstract toUnit(target: string): Metric|InvalidMetric;
   isValid(): this is Metric {
     return true;
   }
 }
 
-export class InvalidMetric {
-  constructor(readonly value: number|null, readonly unit: string|null) {}
+export class InvalidMetric extends BaseMetric {
+  constructor(readonly value: number|null, readonly unit: string|null) {
+    super();
+  }
   toString(): string {
     return `Invalid metric with value '${this.value}' and unit '${this.unit}'`;
   }

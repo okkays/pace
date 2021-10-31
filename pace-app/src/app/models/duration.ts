@@ -1,7 +1,24 @@
 import {InvalidMetric, Metric} from './metric';
 import {parseValue} from './util';
 
-type DurationUnit = 'hour'|'minute'|'second'|'day'|'week'|'month';
+export const DURATIONS = [
+  'second',
+  'minute',
+  'hour',
+  'day',
+  'week',
+  'month',
+] as const;
+
+type DurationUnit = typeof DURATIONS[number];
+
+export function depluralizeDuration(metric: string): string {
+  return metric.replace(/s$/, '');
+}
+
+export function pluralizeDuration(metric: DurationUnit): string {
+  return metric + 's';
+}
 
 export class Duration extends Metric {
   constructor(readonly value: number|null, readonly unit: DurationUnit) {

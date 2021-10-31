@@ -35,5 +35,6 @@ It can:
 It does these things in a user-friendly way, providing:
 
 - [ ] Type-ahead hints, with tab completion.
+  - [ ] When a number is typed, suggest singular/plural deviations
 - [ ] Live error highlighting.
 - [ ] Live display of results.
