@@ -114,7 +114,6 @@ export function buildSearchArgs<T extends string>(options: readonly T[]):
 export function selectResult<T>(output: EventEmitter<T>):
     MonoTypeOperatorFunction<SearchResult<T>> {
   return pipe(tap(({selectedItem, selectedItemAsString, results}) => {
-    console.log(results, selectedItem, selectedItemAsString);
     if (!selectedItemAsString || !selectedItem) return;
     if (!results.includes(selectedItemAsString)) return;
     console.log('Selecting:', selectedItem);

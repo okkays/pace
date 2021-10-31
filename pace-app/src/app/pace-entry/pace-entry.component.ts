@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {map, Observable} from 'rxjs';
+import {filter} from 'rxjs/operators';
 
 import {getMetricOptions, searchOptions, selectResult} from '../models/autocomplete';
 import {InvalidMetric, Metric} from '../models/metric';
@@ -20,16 +21,24 @@ interface RawMetrics {
 export class PaceEntryComponent implements OnInit {
   @Input() label: string = 'Pace';
   @Input() placeholder: string = '5 kph';
+  @Input() allowValues: boolean = true;
   @Output() metricsSelected = new EventEmitter<Metric[]>();
   actionControl = new FormControl();
 
   filteredOptions!: Observable<string[]>;
   enteredMetrics$!: Observable<RawMetrics>;
 
-  constructor() {}
-
   ngOnInit(): void {
     this.enteredMetrics$ = this.actionControl.valueChanges.pipe(
+        filter(text => {
+          if (this.allowValues) return true;
+          if (typeof text !== 'string') return false;
+          if (text.match(/\d+/)) {
+            this.actionControl.setValue(text.replace(/\d+/g, ''));
+            return false;
+          };
+          return true;
+        }),
         map(text => {
           return {
             text,

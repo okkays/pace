@@ -36,6 +36,16 @@ export class Distance extends Metric {
     super();
   }
 
+  toString(): string {
+    const unit = this.isPlural() ? pluralizeDistance(this.unit) : this.unit;
+    const value = this.value === null ? '' : `${this.value} `;
+    return `${value} ${unit}`;
+  }
+
+  withValue(value: number): Distance {
+    return new Distance(value, this.unit);
+  }
+
   private getValueInMeters(): number|null {
     if (this.value === null) return null;
     if (this.unit === 'meter') return this.value;

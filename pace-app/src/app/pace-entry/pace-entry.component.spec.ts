@@ -9,22 +9,23 @@ import {PaceEntryComponent} from './pace-entry.component';
 
 
 
-async function getActionState() {
-  const {fixture, loader} = createTestEnvironment(PaceEntryComponent);
+async function getPaceState(componentInputs?: Record<string, unknown>) {
+  const {fixture, loader} =
+      createTestEnvironment(PaceEntryComponent, componentInputs);
   expect(fixture.componentInstance).toBeTruthy();
-  const actionSelected$ =
+  const paceSelected$ =
       fixture.componentInstance.metricsSelected.pipe(shareReplay());
-  actionSelected$.subscribe();
+  paceSelected$.subscribe();
   const harness = await loader.getHarness(MatAutocompleteHarness);
 
-  return {actionSelected$, harness};
+  return {paceSelected$, harness};
 }
 
 async function getOptionTexts(options: MatOptionHarness[]): Promise<string[]> {
   return await Promise.all(options.map(o => o.getText()));
 }
 
-describe('ActionSelectorComponent', () => {
+describe('PaceSelectorComponent', () => {
   beforeEach(async () => {
     await setupModule({
       declarations: [PaceEntryComponent],
@@ -32,7 +33,7 @@ describe('ActionSelectorComponent', () => {
   });
 
   it('should show matched durations', async () => {
-    const {harness} = await getActionState();
+    const {harness} = await getPaceState();
 
     await harness.enterText('5 seconds');
 
@@ -41,7 +42,7 @@ describe('ActionSelectorComponent', () => {
   });
 
   it('should show matched distances', async () => {
-    const {harness} = await getActionState();
+    const {harness} = await getPaceState();
 
     await harness.enterText('5 feet');
 
@@ -50,7 +51,7 @@ describe('ActionSelectorComponent', () => {
   });
 
   it('should show matched paces', async () => {
-    const {harness} = await getActionState();
+    const {harness} = await getPaceState();
 
     await harness.enterText('5 km/s');
 
@@ -62,7 +63,7 @@ describe('ActionSelectorComponent', () => {
   });
 
   it('should show matched special paces', async () => {
-    const {harness} = await getActionState();
+    const {harness} = await getPaceState();
 
     await harness.enterText('5 kp');
 
@@ -76,7 +77,7 @@ describe('ActionSelectorComponent', () => {
   });
 
   it('should filter unmatched options', async () => {
-    const {harness} = await getActionState();
+    const {harness} = await getPaceState();
 
     await harness.enterText('Z');
 
@@ -84,11 +85,11 @@ describe('ActionSelectorComponent', () => {
   });
 
   it('should emit selected distances', async () => {
-    const {harness, actionSelected$} = await getActionState();
+    const {harness, paceSelected$} = await getPaceState();
 
     await harness.enterText('5 ft');
     await harness.selectOption({text: '5 ft'});
-    const metrics = await firstValueFrom(actionSelected$);
+    const metrics = await firstValueFrom(paceSelected$);
 
     expect(metrics).toHaveSize(1);
     expect(metrics[0].unit).toBe('foot');
@@ -96,11 +97,11 @@ describe('ActionSelectorComponent', () => {
   });
 
   it('should emit selected durations', async () => {
-    const {harness, actionSelected$} = await getActionState();
+    const {harness, paceSelected$} = await getPaceState();
 
     await harness.enterText('5 hours');
     await harness.selectOption({text: '5 hours'});
-    const metrics = await firstValueFrom(actionSelected$);
+    const metrics = await firstValueFrom(paceSelected$);
 
     expect(metrics).toHaveSize(1);
     expect(metrics[0].unit).toBe('hour');
@@ -108,14 +109,23 @@ describe('ActionSelectorComponent', () => {
   });
 
   it('should emit selected paces', async () => {
-    const {harness, actionSelected$} = await getActionState();
+    const {harness, paceSelected$} = await getPaceState();
 
     await harness.enterText('5 km/hour');
     await harness.selectOption({text: '5 km/hour'});
-    const metrics = await lastValueFrom(actionSelected$.pipe(take(2)));
+    const metrics = await lastValueFrom(paceSelected$.pipe(take(2)));
 
     expect(metrics).toHaveSize(1);
     expect(metrics[0].unit).toBe('kilometer/hour');
     expect(metrics[0].value).toBe(5);
+  });
+
+  it('can be restricted to units only', async () => {
+    const {harness} = await getPaceState({allowValues: false});
+
+    await harness.enterText('5 meters');
+
+    const newValue = await harness.getValue();
+    expect(newValue).toBe(' meters');
   });
 });

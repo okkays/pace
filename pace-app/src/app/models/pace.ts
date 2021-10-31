@@ -163,6 +163,12 @@ export class Pace extends Metric {
     }
   }
 
+  toString(): string {
+    const unit = this.isPlural() ? pluralizePace(this.unit) : this.unit;
+    const value = this.value === null ? '' : `${this.value} `;
+    return `${value}${unit}`;
+  }
+
   /**
    * Transforms this pace into another pace, which may invole:
    * - swapping ratio (min/km to km/min)
@@ -175,8 +181,8 @@ export class Pace extends Metric {
     if (targetPace.value !== null) return new InvalidMetric(null, null);
     if (this.value === null) return targetPace;
 
-    let originalLeft = this.left;
-    let originalRight = this.right;
+    let originalLeft = this.left.withValue(this.left.value || 1);
+    let originalRight = this.right.withValue(this.right.value || 1);
 
     const isSwap =
         ((targetPace.left instanceof Duration &&
@@ -204,6 +210,7 @@ function convertPaceMetric(original: PaceMetric, target: PaceMetric) {
     return original.toUnit(target.unit);
   }
   if (original instanceof Duration && target instanceof Duration) {
+    console.log('boop', original, target, original.toUnit(target.unit).value);
     return original.toUnit(target.unit);
   }
   return new InvalidMetric(null, null);
@@ -242,7 +249,8 @@ export class InvalidPace extends InvalidMetric {
 
 function getValue(leftValue: number|null, rightValue: number|null): number|
     null {
-  if (leftValue === null) return null;
+  if (leftValue === null && rightValue == null) return null;
   if (rightValue === null) return leftValue;
+  if (leftValue === null) return 1 / rightValue;
   return leftValue / rightValue;
 }

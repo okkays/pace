@@ -27,9 +27,14 @@ export async function setupModule(additionalModuleDef: TestModuleMetadata) {
   await TestBed.configureTestingModule(mergedDefs).compileComponents();
 }
 
-export function createTestEnvironment<T>(componentType: Type<T>) {
+export function createTestEnvironment<T>(
+    componentType: Type<T>, componentInputs?: Partial<T>) {
   const fixture: ComponentFixture<T> = TestBed.createComponent(componentType);
   const loader: HarnessLoader = TestbedHarnessEnvironment.loader(fixture);
+
+  if (componentInputs) {
+    Object.assign(fixture.componentInstance, componentInputs);
+  }
 
   fixture.detectChanges();
   return {fixture, loader};

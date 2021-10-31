@@ -25,6 +25,15 @@ describe('Pace', () => {
   it('converts distance/duration to duration/distance', () => {
     (expect(TEN_MINS_PER_MILE.toUnit('mi/h')) as any)
         .toBeMetric(6, 'mile/hour');
+
+    expect((parsePace('6 kph') as Pace).toUnit('min/km').toString())
+        .toBe('10 minutes/kilometer');
+
+    expect((parsePace('6 kph') as Pace).toUnit('sec/km').toString())
+        .toBe('600 seconds/kilometer');
+
+    expect((parsePace('6 kph') as Pace).toUnit('km/min').toString())
+        .toBe('0.1 kilometers/minute');
   });
 
   it('converts to *p*', () => {

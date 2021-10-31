@@ -30,13 +30,23 @@ export function depluralizeDuration(metric: string): string {
 }
 
 export function pluralizeDuration(metric: string): string {
-  if (['w', 'h', 'd', 's', 'm'].includes(metric)) return metric;
+  if (['w', 'h', 'd', 's', 'm', 'min'].includes(metric)) return metric;
   return metric + 's';
 }
 
 export class Duration extends Metric {
   constructor(readonly value: number|null, readonly unit: DurationUnit) {
     super();
+  }
+
+  toString(): string {
+    const unit = this.isPlural() ? pluralizeDuration(this.unit) : this.unit;
+    const value = this.value === null ? '' : `${this.value} `;
+    return `${value} ${unit}`;
+  }
+
+  withValue(value: number): Duration {
+    return new Duration(value, this.unit);
   }
 
   private getValueInSeconds(): number|null {

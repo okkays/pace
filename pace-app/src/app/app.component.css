@@ -1,0 +1,24 @@
+mat-card {
+  margin: 15px;
+}
+
+app-pace-entry {
+  margin: 10px;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.equals {
+  font-size: 2em;
+}
+
+.result {
+  font-size: 2em;
+}
+
+.pace-entry, .equals, .result {
+  flex-grow: 1;
+}
