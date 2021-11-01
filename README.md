@@ -1,6 +1,8 @@
-A pace converter with reasonable UX.
+# A pace converter with reasonable UX.
 
-It can:
+See it at https://okkays.github.io/pace
+
+## What does it do?
 
 - Recognize and convert distances:
   - [x] mi, mile(s), M
@@ -34,7 +36,26 @@ It can:
 
 It does these things in a user-friendly way, providing:
 
-- [ ] Type-ahead hints, with tab completion.
-  - [ ] When a number is typed, suggest singular/plural deviations
-- [ ] Live error highlighting.
-- [ ] Live display of results.
+- [x] Type-ahead hints, with tab completion.
+  - [x] When a number is typed, suggest singular/plural deviations
+- [x] Live display of results.
+
+## How to dev
+
+Running tests:
+
+```bash
+ng test
+```
+
+Running a dev server (at http://localhost:4200):
+
+```bash
+ng serve
+```
+
+Deploying:
+
+```bash
+ng deploy
+```
