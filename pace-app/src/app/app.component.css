@@ -1,3 +1,15 @@
+@media all and (max-width: 1000px) {
+  .input-wrapper {
+    flex-direction: column;
+  }
+}
+
+@media all and (min-width:1001px) {
+  .input-wrapper {
+    flex-direction: row;
+  }
+}
+
 mat-card {
   margin: 15px;
 }
