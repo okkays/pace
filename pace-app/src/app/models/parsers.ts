@@ -21,7 +21,7 @@ export function parseMetrics(metric: string): Metric[]|InvalidMetric {
 }
 
 function clean(metric: string): string {
-  return removeWhitespace(metric);
+  return removeWhitespace(metric.toLowerCase());
 }
 
 function removeWhitespace(metric: string): string {

@@ -66,6 +66,10 @@ export interface SearchResult<T = string> {
   selectedItemAsString?: string;
 }
 
+function lowerIncludes(options: string[], term: string): boolean {
+  return options.some(option => option.toLowerCase() == term.toLowerCase());
+}
+
 export function searchOptions<T = undefined>():
     OperatorFunction<SearchArgs<T>, SearchResult<T>> {
   return pipe(
@@ -95,7 +99,7 @@ export function searchOptions<T = undefined>():
 export function buildSearchArgs<T extends string>(options: readonly T[]):
     OperatorFunction<string, SearchArgs<T>> {
   function isOption(maybeOption: string): maybeOption is T {
-    return options.includes(maybeOption as T);
+    return lowerIncludes([...options], maybeOption);
   }
 
   return pipe(
@@ -115,7 +119,7 @@ export function selectResult<T>(output: EventEmitter<T>):
     MonoTypeOperatorFunction<SearchResult<T>> {
   return pipe(tap(({selectedItem, selectedItemAsString, results}) => {
     if (!selectedItemAsString || !selectedItem) return;
-    if (!results.includes(selectedItemAsString)) return;
+    if (!lowerIncludes(results, selectedItemAsString)) return;
     console.log('Selecting:', selectedItem);
     output.next(selectedItem);
   }));
