@@ -1,5 +1,5 @@
 import {InvalidMetric, Metric} from './metric';
-import {parseValue} from './util';
+import {parseHms, parseValue} from './util';
 
 export const DURATIONS = [
   'second',
@@ -85,9 +85,19 @@ export class Duration extends Metric {
   }
 }
 
+function parseDurationValue(value: string, unit: DurationUnit|null): number|
+    null {
+  if (value.includes(':')) {
+    if (unit === null) return null;
+    const seconds = new Duration(parseHms(value), 'second');
+    return seconds.toUnit(unit).value;
+  }
+  return parseValue(value);
+}
+
 export function parseDuration(metric: string): Duration|InvalidMetric {
   const unit = parseUnit(metric);
-  const value = parseValue(metric);
+  const value = parseDurationValue(metric, unit);
   if (unit === null) return new InvalidMetric(value, unit);
   return new Duration(value, unit);
 }

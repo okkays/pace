@@ -2,6 +2,12 @@ import {Duration, parseDuration} from './duration';
 
 describe('Duration', () => {
   it('Should recognize durations', () => {
+    expect(parseDuration('12:34 seconds'))
+        .toEqual(new Duration((12 * 60) + 34, 'second'));
+    expect(parseDuration('12:30 minutes'))
+        .toEqual(new Duration(12.5, 'minute'));
+    expect(parseDuration('11:30:00 hours')).toEqual(new Duration(11.5, 'hour'));
+
     expect(parseDuration('1323.03 seconds'))
         .toEqual(new Duration(1323.03, 'second'));
 

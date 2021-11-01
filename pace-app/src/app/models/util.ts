@@ -38,3 +38,20 @@ export function getMs(minutes: number): string {
 
   return `${paddedMinute}:${paddedSecond}`;
 }
+
+/** Parses an HH:MM:SS string, returning the number of seconds represented. */
+export function parseHms(metric: string): number|null {
+  const digitsOnly = metric.replace(/[^\d\.:]+/g, '');
+  const portions = digitsOnly.split(':');
+  if (portions.length === 2) {
+    const minutes = parseFloat(portions[0]);
+    const seconds = parseFloat(portions[1]);
+    return (60 * minutes) + seconds;
+  } else if (portions.length === 3) {
+    const hours = parseFloat(portions[0]);
+    const minutes = parseFloat(portions[1]);
+    const seconds = parseFloat(portions[2]);
+    return (60 * 60 * hours) + (60 * minutes) + seconds;
+  }
+  return null;
+}
