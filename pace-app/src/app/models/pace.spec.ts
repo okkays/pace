@@ -53,7 +53,7 @@ describe('Pace', () => {
         .toBe('10:55 minutes/kilometer');
 
     expect((parsePace('0.012 kph') as Pace).toUnit('hour/km').toString())
-        .toBe('01:23:20 hours/kilometer');
+        .toBe('1:23:20 hours/kilometer');
   });
 
   it('handles invalid conversions', () => {
