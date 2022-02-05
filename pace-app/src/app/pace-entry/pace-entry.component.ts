@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {combineLatest, map, Observable, of} from 'rxjs';
-import {filter, startWith} from 'rxjs/operators';
+import {filter, startWith, tap} from 'rxjs/operators';
 
 import {getMetricOptions, searchOptions, selectResult} from '../models/autocomplete';
 import {InvalidMetric, Metric} from '../models/metric';
@@ -38,6 +38,7 @@ export class PaceEntryComponent implements OnInit {
       this.matchUnitOf$ = of([]);
     }
     this.enteredMetrics$ = this.actionControl.valueChanges.pipe(
+        tap(() => this.metricsSelected.next([])),
         filter(text => {
           if (typeof text !== 'string') {
             return false;

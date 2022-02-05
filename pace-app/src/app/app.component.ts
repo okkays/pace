@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
-import {combineLatest, Observable, ReplaySubject} from 'rxjs';
-import {filter, map, shareReplay, startWith, tap} from 'rxjs/operators';
+import {combineLatest, Observable, ReplaySubject, Subject} from 'rxjs';
+import {filter, map, mapTo, merge, mergeWith, shareReplay, startWith, tap} from 'rxjs/operators';
 
 import {Action} from './models/action';
 import {forOrAt} from './models/effort';
@@ -33,29 +33,34 @@ export class AppComponent {
               tap(result => {
                 console.log('Result:', result);
               }),
-              map(metric => metric?.isValid() ? metric : null), shareReplay(1));
+              map(metric => metric?.isValid() ? metric : null),
+              shareReplay(1),
+          );
 
   convertedEffort$: Observable<Metric|null> =
       combineLatest([
         this.fromSubject$,
         this.convertedMetric$.pipe(startWith(null)),
         this.forOrAtSubject$,
-      ]).pipe(map(([from, converted, forOrAts]) => {
-        const fromMetrics = [converted || from].flat();
-        if (!fromMetrics.length) {
-          return null;
-        }
-        const potentialMetrics =
-            fromMetrics
-                .map(fromMetric => {
-                  return forOrAts.map(forOrAtMetric => {
-                    return forOrAt(fromMetric, forOrAtMetric);
-                  });
-                })
-                .flat();
-        for (const metric of potentialMetrics) {
-          if (metric.isValid()) return metric;
-        }
-        return null;
-      }));
+      ])
+          .pipe(
+              map(([from, converted, forOrAts]) => {
+                const fromMetrics = [converted || from].flat();
+                if (!fromMetrics.length) {
+                  return null;
+                }
+                const potentialMetrics =
+                    fromMetrics
+                        .map(fromMetric => {
+                          return forOrAts.map(forOrAtMetric => {
+                            return forOrAt(fromMetric, forOrAtMetric);
+                          });
+                        })
+                        .flat();
+                for (const metric of potentialMetrics) {
+                  if (metric.isValid()) return metric;
+                }
+                return null;
+              }),
+          );
 }
