@@ -12,7 +12,9 @@
         label="from" placeholder="5 kph"></app-pace-entry>
       <app-pace-entry
         (metricsSelected)="toSubject$.next($event)"
-        label="to" [allowValues]="false" placeholder="min/km"></app-pace-entry>
+        [allowValues]="false"
+        [matchUnitOf$]="fromSubject$"
+        label="to" placeholder="min/km"></app-pace-entry>
     </div>
 
     <ng-container *ngIf="convertedMetric$ | async as result">

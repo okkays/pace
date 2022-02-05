@@ -8,7 +8,7 @@
          [formControl]="actionControl"
          [matAutocomplete]="auto">
   <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+    <mat-option *ngFor="let option of filteredOptions$ | async" [value]="option">
       {{option}}
     </mat-option>
   </mat-autocomplete>
