@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {combineLatest, Observable, ReplaySubject} from 'rxjs';
-import {filter, map, tap} from 'rxjs/operators';
+import {filter, map, shareReplay, startWith, tap} from 'rxjs/operators';
 
 import {Action} from './models/action';
 import {MaybeMetric, Metric} from './models/metric';
@@ -14,6 +14,7 @@ export class AppComponent {
   actionSelected$ = new ReplaySubject<Action>(1);
   fromSubject$ = new ReplaySubject<Metric[]>(1);
   toSubject$ = new ReplaySubject<Metric[]>(1);
+  forOrAtSubject$ = new ReplaySubject<Metric[]>(1);
 
   convertedMetric$: Observable<Metric|null> =
       combineLatest([ this.fromSubject$, this.toSubject$ ])
@@ -31,9 +32,27 @@ export class AppComponent {
                   return from[0].toUnit(to[0].unit as string);
                 }),
                 tap(result => { console.log('Result:', result); }),
-                map(metric => metric?.isValid() ? metric : null));
-}
+                map(metric => metric?.isValid() ? metric : null),
+                shareReplay(1));
 
-function isMetricForFilter(metric: MaybeMetric): metric is Metric {
-  return metric.isValid();
+  convertedEffort$: Observable<Metric|null> =
+      combineLatest([
+        this.fromSubject$,
+        this.convertedMetric$.pipe(startWith(null)),
+        this.forOrAtSubject$,
+      ]).pipe(map(([ from, converted, forOrAts ]) => {
+        const fromMetrics = [ converted || from ].flat();
+        if (!fromMetrics.length) {
+          return null;
+        }
+        return (fromMetrics
+                    .map(fromMetric => {
+                      return forOrAts.map(forOrAtMetric => {
+                        return fromMetric.forOrAt(forOrAtMetric);
+                      });
+                    })
+                    .flat()
+                    .find(metric => !!metric) ||
+                null);
+      }));
 }
