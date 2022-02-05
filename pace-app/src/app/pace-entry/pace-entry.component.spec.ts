@@ -29,7 +29,7 @@ async function getOptionTexts(options: MatOptionHarness[]): Promise<string[]> {
 describe('PaceSelectorComponent', () => {
   beforeEach(async () => {
     await setupModule({
-      declarations : [ PaceEntryComponent ],
+      declarations: [PaceEntryComponent],
     });
   });
 
@@ -89,7 +89,7 @@ describe('PaceSelectorComponent', () => {
     const {harness, paceSelected$} = await getPaceState();
 
     await harness.enterText('5 ft');
-    await harness.selectOption({text : '5 ft'});
+    await harness.selectOption({text: '5 ft'});
     const metrics = await firstValueFrom(paceSelected$);
 
     expect(metrics).toHaveSize(1);
@@ -101,7 +101,7 @@ describe('PaceSelectorComponent', () => {
     const {harness, paceSelected$} = await getPaceState();
 
     await harness.enterText('5 hours');
-    await harness.selectOption({text : '5 hours'});
+    await harness.selectOption({text: '5 hours'});
     const metrics = await firstValueFrom(paceSelected$);
 
     expect(metrics).toHaveSize(1);
@@ -113,7 +113,7 @@ describe('PaceSelectorComponent', () => {
     const {harness, paceSelected$} = await getPaceState();
 
     await harness.enterText('5 km/hour');
-    await harness.selectOption({text : '5 km/hour'});
+    await harness.selectOption({text: '5 km/hour'});
     const metrics = await lastValueFrom(paceSelected$.pipe(take(2)));
 
     expect(metrics).toHaveSize(1);
@@ -122,7 +122,7 @@ describe('PaceSelectorComponent', () => {
   });
 
   it('can be restricted to units only', async () => {
-    const {harness} = await getPaceState({allowValues : false});
+    const {harness} = await getPaceState({allowValues: false});
 
     await harness.enterText('5 meters');
 
@@ -132,7 +132,7 @@ describe('PaceSelectorComponent', () => {
 
   it('should limit to matchMetrics distance', async () => {
     const {harness} =
-        await getPaceState({matchUnitOf$ : of([ parseDistance('meter') ])});
+        await getPaceState({matchUnitOf$: of([parseDistance('meter')])});
 
     await harness.enterText('mi');
 
@@ -144,7 +144,7 @@ describe('PaceSelectorComponent', () => {
 
   it('should limit to matchMetrics duration', async () => {
     const {harness} =
-        await getPaceState({matchUnitOf$ : of([ parseDuration('hour') ])});
+        await getPaceState({matchUnitOf$: of([parseDuration('hour')])});
 
     await harness.enterText('m');
 

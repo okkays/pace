@@ -1,4 +1,3 @@
-import { Metric } from './metric';
+import {Metric} from './metric';
 
-describe('Metric', () => {
-});
+describe('Metric', () => {});

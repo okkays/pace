@@ -3,13 +3,16 @@ export abstract class BaseMetric {
   abstract readonly unit: string|null;
   abstract isValid(): this is Metric;
 
-  isPlural(): boolean { return this.value !== 1; }
+  isPlural(): boolean {
+    return this.value !== 1;
+  }
 }
 
 export abstract class Metric extends BaseMetric {
   abstract toUnit(target: string): Metric|InvalidMetric;
-  abstract forOrAt(target: Metric): Metric|null;
-  isValid(): this is Metric { return true; }
+  isValid(): this is Metric {
+    return true;
+  }
 }
 
 export class InvalidMetric extends BaseMetric {
@@ -19,13 +22,14 @@ export class InvalidMetric extends BaseMetric {
   toString(): string {
     return `Invalid metric with value '${this.value}' and unit '${this.unit}'`;
   }
-  isValid(): this is Metric { return false; }
+  isValid(): this is Metric {
+    return false;
+  }
 }
 
 export type MaybeMetric = Metric|InvalidMetric;
 
 export function assertValid<T extends Metric>(metric: T|InvalidMetric): T {
-  if (!metric.isValid())
-    throw new TypeError('Metric must be valid');
+  if (!metric.isValid()) throw new TypeError('Metric must be valid');
   return metric;
 }

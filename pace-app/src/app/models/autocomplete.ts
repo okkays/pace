@@ -1,23 +1,13 @@
 import {EventEmitter} from '@angular/core';
 import {map, MonoTypeOperatorFunction, OperatorFunction, pipe, tap} from 'rxjs';
 
-import {
-  abbreviateDistance,
-  Distance,
-  DISTANCES,
-  pluralizeDistance
-} from './distance';
-import {
-  abbreviateDuration,
-  Duration,
-  DURATIONS,
-  pluralizeDuration
-} from './duration';
+import {abbreviateDistance, Distance, DISTANCES, pluralizeDistance} from './distance';
+import {abbreviateDuration, Duration, DURATIONS, pluralizeDuration} from './duration';
 import {InvalidMetric, Metric} from './metric';
 import {Pace, PACES, pluralizePace} from './pace';
 
-export function getMetricOptions(metric: Metric|InvalidMetric,
-                                 matchMetrics: Metric[]): string[] {
+export function getMetricOptions(
+    metric: Metric|InvalidMetric, matchMetrics: Metric[]): string[] {
   const options = [];
   if ((!metric.isValid() || metric instanceof Distance) &&
       (!matchMetrics.length ||
@@ -43,7 +33,7 @@ function getDistanceOptions(metric: Distance|InvalidMetric): string[] {
   if (metric.isPlural()) {
     return distances.map(distance => pluralizeDistance(distance));
   }
-  return [...distances ];
+  return [...distances];
 }
 
 function getDurationOptions(metric: Duration|InvalidMetric): string[] {
@@ -52,7 +42,7 @@ function getDurationOptions(metric: Duration|InvalidMetric): string[] {
   if (metric.isPlural()) {
     return durations.map(duration => pluralizeDuration(duration));
   }
-  return [...durations ];
+  return [...durations];
 }
 
 function getPaceOptions(metric: Pace|InvalidMetric): string[] {
@@ -66,7 +56,7 @@ function getPaceOptions(metric: Pace|InvalidMetric): string[] {
     return pluralPaces;
   }
 
-  return [...PACES ];
+  return [...PACES];
 }
 
 export interface SearchArgs<T = string> {
@@ -95,7 +85,7 @@ export function searchOptions<T = undefined>():
         const filteredOptions =
             options.filter(option => option.toLowerCase().includes(lowerTerm));
         return {
-          options : filteredOptions,
+          options: filteredOptions,
           prefix,
           selectedItem,
           selectedItemAsString,
@@ -104,7 +94,7 @@ export function searchOptions<T = undefined>():
       map(({prefix, options, selectedItem, selectedItemAsString}) => {
         const prefixedOptions = prefix ? options.map(o => prefix + o) : options;
         return {
-          results : prefixedOptions,
+          results: prefixedOptions,
           selectedItem,
           selectedItemAsString,
         };
@@ -116,16 +106,16 @@ export function searchOptions<T = undefined>():
 export function buildSearchArgs<T extends string>(options: readonly T[]):
     OperatorFunction<string, SearchArgs<T>> {
   function isOption(maybeOption: string): maybeOption is T {
-    return lowerIncludes([...options ], maybeOption);
+    return lowerIncludes([...options], maybeOption);
   }
 
   return pipe(
       map(term => {
         return {
           term,
-          selectedItem : isOption(term) ? term : undefined,
-          selectedItemAsString : term,
-          options : [...options ],
+          selectedItem: isOption(term) ? term : undefined,
+          selectedItemAsString: term,
+          options: [...options],
         };
       }),
   );
@@ -135,10 +125,8 @@ export function buildSearchArgs<T extends string>(options: readonly T[]):
 export function selectResult<T>(output: EventEmitter<T>):
     MonoTypeOperatorFunction<SearchResult<T>> {
   return pipe(tap(({selectedItem, selectedItemAsString, results}) => {
-    if (!selectedItemAsString || !selectedItem)
-      return;
-    if (!lowerIncludes(results, selectedItemAsString))
-      return;
+    if (!selectedItemAsString || !selectedItem) return;
+    if (!lowerIncludes(results, selectedItemAsString)) return;
     console.log('Selecting:', selectedItem);
     output.next(selectedItem);
   }));
