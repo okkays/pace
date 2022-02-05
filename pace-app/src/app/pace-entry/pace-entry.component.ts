@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {combineLatest, map, Observable, of} from 'rxjs';
-import {filter} from 'rxjs/operators';
+import {filter, startWith} from 'rxjs/operators';
 
 import {
   getMetricOptions,
@@ -57,7 +57,10 @@ export class PaceEntryComponent implements OnInit {
     );
 
     this.filteredOptions$ =
-        combineLatest(this.enteredMetrics$, this.matchUnitOf$)
+        combineLatest([
+          this.enteredMetrics$.pipe(startWith({text : '', metrics : []})),
+          this.matchUnitOf$.pipe(startWith([]))
+        ])
             .pipe(
                 map(([ {text, metrics}, matchMetrics ]) => {
                   const unitText = text.replace(/^[^A-Za-z]*/, '');
