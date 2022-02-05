@@ -1,0 +1,38 @@
+<mat-card class="convert">
+  <div class="input-wrapper">
+    <div class="pace-entry">
+      <app-pace-entry
+        (metricsSelected)="fromSubject$.next($event)"
+        label="from" placeholder="5 kph"></app-pace-entry>
+      <app-pace-entry
+        (metricsSelected)="toSubject$.next($event)"
+        [allowValues]="false"
+        [matchUnitOf$]="fromSubject$"
+        label="to" placeholder="min/km"></app-pace-entry>
+      <app-pace-entry
+        (metricsSelected)="forOrAtSubject$.next($event)"
+        [requireValues]="true"
+        label="for/at/in" placeholder="6 hours"></app-pace-entry>
+    </div>
+
+    <ng-container *ngIf="convertedMetric$ | async as result">
+      <div class="equals">
+        <p>=</p>
+      </div>
+
+      <div class="result">
+        <p>{{result}}</p>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="convertedEffort$ | async as result">
+      <div class="equals">
+        <p>=</p>
+      </div>
+
+      <div class="result">
+        <p>{{result}}</p>
+      </div>
+    </ng-container>
+  </div>
+</mat-card>

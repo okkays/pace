@@ -1,0 +1,36 @@
+@media all and (max-width: 1000px) {
+  .input-wrapper {
+    flex-direction: column;
+  }
+}
+
+@media all and (min-width:1001px) {
+  .input-wrapper {
+    flex-direction: row;
+  }
+}
+
+app-pace-entry {
+  margin: 10px;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.equals {
+  font-size: 2em;
+}
+
+.result {
+  font-size: 2em;
+}
+
+.pace-entry {
+  margin-top: 15px;
+}
+
+.pace-entry, .equals, .result {
+  flex-grow: 1;
+}

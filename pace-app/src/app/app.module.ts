@@ -6,9 +6,10 @@ import {ActionSelectorComponent} from './action-selector/action-selector.compone
 import {AppComponent} from './app.component';
 import {MaterialModule} from './material/material.module';
 import {PaceEntryComponent} from './pace-entry/pace-entry.component';
+import { ConversionEntryComponent } from './conversion-entry/conversion-entry.component';
 
 @NgModule({
-  declarations: [AppComponent, ActionSelectorComponent, PaceEntryComponent],
+  declarations: [AppComponent, ActionSelectorComponent, PaceEntryComponent, ConversionEntryComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
