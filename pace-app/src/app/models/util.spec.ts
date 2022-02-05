@@ -1,4 +1,4 @@
-import { parseValue } from './util';
+import {parseValue} from './util';
 
 describe('parseValue', () => {
   it('should read ints', () => {

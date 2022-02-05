@@ -1,9 +1,10 @@
-import { Distance, parseDistance } from './distance';
+import {Distance, parseDistance} from './distance';
 import {InvalidMetric} from './metric';
 
 describe('Distance', () => {
   it('Should recognize distances', () => {
-    expect(parseDistance('1323.03 mile')).toEqual(new Distance(1323.03, 'mile'));
+    expect(parseDistance('1323.03 mile'))
+        .toEqual(new Distance(1323.03, 'mile'));
 
     expect(parseDistance('0 km')).toEqual(new Distance(0, 'kilometer'));
     expect(parseDistance('0 kms')).toEqual(new Distance(0, 'kilometer'));
@@ -49,6 +50,4 @@ describe('Distance', () => {
     expect(fromDistance.toUnit('kilometer').unit).toBe('kilometer');
     expect(fromDistance.toUnit('mile').unit).toBe('mile');
   });
-
-
 });

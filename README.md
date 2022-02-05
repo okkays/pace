@@ -30,9 +30,9 @@ See it at https://okkays.github.io/pace
   - [x] min/km
   - [x] mph
 - Convert efforts:
-  - [ ] Find distance given pace and duration
-  - [ ] Find duration given distance and pace
-  - [ ] Find pace given distance and duration
+  - [x] Find distance given pace and duration
+  - [x] Find duration given distance and pace
+  - [x] Find pace given distance and duration
 
 It does these things in a user-friendly way, providing:
 

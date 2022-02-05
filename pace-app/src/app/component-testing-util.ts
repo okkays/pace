@@ -13,7 +13,8 @@ const DEFAULTS: TestModuleMetadata =
       declarations: [],
     }
 
-export async function setupModule(additionalModuleDef: TestModuleMetadata) {
+export async function
+setupModule(additionalModuleDef: TestModuleMetadata) {
   const mergedDefs: TestModuleMetadata = {
     ...additionalModuleDef,
     imports:
@@ -27,8 +28,8 @@ export async function setupModule(additionalModuleDef: TestModuleMetadata) {
   await TestBed.configureTestingModule(mergedDefs).compileComponents();
 }
 
-export function createTestEnvironment<T>(
-    componentType: Type<T>, componentInputs?: Partial<T>) {
+export function
+createTestEnvironment<T>(componentType: Type<T>, componentInputs?: Partial<T>) {
   const fixture: ComponentFixture<T> = TestBed.createComponent(componentType);
   const loader: HarnessLoader = TestbedHarnessEnvironment.loader(fixture);
 

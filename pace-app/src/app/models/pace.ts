@@ -187,7 +187,7 @@ export class Pace extends Metric {
    * - changing distance unit (km to mi)
    * - changing duration unit (min to hr)
    */
-  toUnit(target: string): Metric|InvalidMetric {
+  toUnit(target: string): Pace|InvalidMetric {
     const targetPace = parsePace(target);
     if (!targetPace.isValid()) return new InvalidMetric(null, null);
     if (targetPace.value !== null) return new InvalidMetric(null, null);
@@ -215,6 +215,29 @@ export class Pace extends Metric {
 
     return new Pace(left, targetPace.separator, right);
   }
+
+  private alignUnitsForTimes(multiplyBy: PaceMetric): Pace|InvalidMetric {
+    if ((multiplyBy instanceof Distance && this.left instanceof Distance) ||
+        (multiplyBy instanceof Duration && this.left instanceof Duration)) {
+      return this.toUnit([this.right.unit, multiplyBy.unit].join('/'));
+    }
+    return this.toUnit([this.left.unit, multiplyBy.unit].join('/'));
+  }
+
+  times(multiplyBy: PaceMetric): PaceMetric|InvalidMetric {
+    const aligned = this.alignUnitsForTimes(multiplyBy);
+    if (!aligned.isValid() || aligned.value === null) {
+      return aligned;
+    }
+    const multipliedValue = (aligned.value || 1) * (multiplyBy.value || 1);
+    if (multiplyBy instanceof Distance && aligned.left instanceof Duration) {
+      return new Duration(multipliedValue, aligned.left.unit);
+    }
+    if (multiplyBy instanceof Duration && aligned.left instanceof Distance) {
+      return new Distance(multipliedValue, aligned.left.unit);
+    }
+    return new InvalidMetric(multipliedValue, null);
+  }
 }
 
 function convertPaceMetric(original: PaceMetric, target: PaceMetric) {
@@ -222,7 +245,6 @@ function convertPaceMetric(original: PaceMetric, target: PaceMetric) {
     return original.toUnit(target.unit);
   }
   if (original instanceof Duration && target instanceof Duration) {
-    console.log('boop', original, target, original.toUnit(target.unit).value);
     return original.toUnit(target.unit);
   }
   return new InvalidMetric(null, null);
