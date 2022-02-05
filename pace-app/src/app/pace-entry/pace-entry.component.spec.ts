@@ -1,7 +1,7 @@
 import {MatAutocompleteHarness} from '@angular/material/autocomplete/testing';
 import {MatOptionHarness} from '@angular/material/core/testing';
 import {firstValueFrom, lastValueFrom, of} from 'rxjs';
-import {shareReplay, take} from 'rxjs/operators';
+import {shareReplay, take, takeWhile} from 'rxjs/operators';
 
 import {createTestEnvironment, setupModule} from '../component-testing-util';
 import {parseDistance} from '../models/distance';
@@ -26,7 +26,7 @@ async function getOptionTexts(options: MatOptionHarness[]): Promise<string[]> {
   return await Promise.all(options.map(o => o.getText()));
 }
 
-describe('PaceSelectorComponent', () => {
+describe('PaceEntryComponent', () => {
   beforeEach(async () => {
     await setupModule({
       declarations: [PaceEntryComponent],
@@ -90,7 +90,8 @@ describe('PaceSelectorComponent', () => {
 
     await harness.enterText('5 ft');
     await harness.selectOption({text: '5 ft'});
-    const metrics = await firstValueFrom(paceSelected$);
+    const metrics = await lastValueFrom(paceSelected$.pipe(
+        takeWhile(metrics => metrics[0]?.unit !== 'foot', true)));
 
     expect(metrics).toHaveSize(1);
     expect(metrics[0].unit).toBe('foot');
@@ -102,7 +103,8 @@ describe('PaceSelectorComponent', () => {
 
     await harness.enterText('5 hours');
     await harness.selectOption({text: '5 hours'});
-    const metrics = await firstValueFrom(paceSelected$);
+    const metrics = await lastValueFrom(paceSelected$.pipe(
+        takeWhile(metrics => metrics[0]?.unit !== 'hour', true)));
 
     expect(metrics).toHaveSize(1);
     expect(metrics[0].unit).toBe('hour');
@@ -114,7 +116,8 @@ describe('PaceSelectorComponent', () => {
 
     await harness.enterText('5 km/hour');
     await harness.selectOption({text: '5 km/hour'});
-    const metrics = await lastValueFrom(paceSelected$.pipe(take(2)));
+    const metrics = await lastValueFrom(paceSelected$.pipe(
+        takeWhile(metrics => metrics[0]?.unit !== 'kilometer/hour', true)));
 
     expect(metrics).toHaveSize(1);
     expect(metrics[0].unit).toBe('kilometer/hour');
