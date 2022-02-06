@@ -38,8 +38,12 @@ app-pace-entry {
   font-size: 2em;
 }
 
-.result {
-  font-size: 2em;
+.result button {
+  font-size: 1.5em;
+}
+
+.result mat-icon {
+  font-size: .75em;
 }
 
 .pace-entry {

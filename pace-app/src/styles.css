@@ -16,3 +16,8 @@ mat-card {
 .title mat-card-title h1 {
   margin: 0px;
 }
+
+simple-snack-bar span {
+  margin:auto;
+  text-align: center;
+}

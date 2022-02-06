@@ -1,6 +1,9 @@
+import {Clipboard} from '@angular/cdk/clipboard';
 import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {combineLatest, Observable, ReplaySubject} from 'rxjs';
 import {map, shareReplay, startWith, tap} from 'rxjs/operators';
+
 import {Action} from '../models/action';
 import {compliment, forOrAt} from '../models/effort';
 import {Metric} from '../models/metric';
@@ -68,4 +71,18 @@ export class ConversionEntryComponent {
                 return null;
               }),
           );
+
+  constructor(private snackBar: MatSnackBar, private clipboard: Clipboard) {}
+
+  selectConversion(conversion: Metric) {
+    this.conversionSelected.next(conversion);
+    this.copyToClipboard(conversion.toString())
+  }
+
+  copyToClipboard(content: string) {
+    this.snackBar.open(`Copied "${content}" to the clipboard!`, undefined, {
+      duration: 2000,
+    });
+    this.clipboard.copy(content);
+  }
 }
