@@ -39,5 +39,11 @@
         </button>
       </div>
     </ng-container>
+
+    <div class="cancel" *ngIf="!!initialFrom">
+      <button (click)="cancelClicked.emit()" mat-icon-button>
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
   </div>
 </mat-card>

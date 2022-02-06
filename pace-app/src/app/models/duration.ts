@@ -39,6 +39,10 @@ export class Duration extends Metric {
     super();
   }
 
+  clone(): Duration {
+    return new Duration(this.value, this.unit);
+  }
+
   toString(): string {
     const unit = this.isPlural() ? pluralizeDuration(this.unit) : this.unit;
     const value = this.value === null ? '' : `${this.value} `;

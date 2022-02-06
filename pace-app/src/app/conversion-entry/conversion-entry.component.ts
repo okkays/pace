@@ -12,6 +12,7 @@ import {Metric} from '../models/metric';
 })
 export class ConversionEntryComponent {
   @Output() conversionSelected = new EventEmitter<Metric>();
+  @Output() cancelClicked = new EventEmitter<void>();
   @Input() initialFrom?: Metric;
   actionSelected$ = new ReplaySubject<Action>(1);
   fromSubject$ = new ReplaySubject<Metric[]>(1);

@@ -36,6 +36,10 @@ export class Distance extends Metric {
     super();
   }
 
+  clone(): Distance {
+    return new Distance(this.value, this.unit);
+  }
+
   toString(): string {
     const unit = this.isPlural() ? pluralizeDistance(this.unit) : this.unit;
     const value = this.value === null ? '' : `${this.value} `;

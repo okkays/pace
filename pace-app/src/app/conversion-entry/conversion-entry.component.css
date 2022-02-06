@@ -34,3 +34,7 @@ app-pace-entry {
 .pace-entry, .equals, .result {
   flex-grow: 1;
 }
+
+.cancel {
+  margin-right:15px;
+}
