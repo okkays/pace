@@ -65,3 +65,12 @@ export function compliment(metric: Metric): Metric[] {
   if (metric instanceof Pace) return [duration, distance];
   return [];
 }
+
+/**
+ * Returns a few quick conversions based on a given metric.
+ *
+ * Follows the good UX advice of trying to read the user's mind.
+ */
+export function suggest(metric: Metric): Metric[] {
+  return [metric];
+}

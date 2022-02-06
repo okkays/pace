@@ -5,7 +5,7 @@ import {combineLatest, Observable, ReplaySubject} from 'rxjs';
 import {map, shareReplay, startWith, tap} from 'rxjs/operators';
 
 import {Action} from '../models/action';
-import {compliment, forOrAt} from '../models/effort';
+import {compliment, forOrAt, suggest} from '../models/effort';
 import {Metric} from '../models/metric';
 
 @Component({
@@ -21,6 +21,8 @@ export class ConversionEntryComponent {
   fromSubject$ = new ReplaySubject<Metric[]>(1);
   toSubject$ = new ReplaySubject<Metric[]>(1);
   forOrAtSubject$ = new ReplaySubject<Metric[]>(1);
+
+  suggest = suggest;  // Expose to template
 
   forOrAtCompliment$: Observable<Metric[]> = this.fromSubject$.pipe(
       map(fromMetrics => fromMetrics.map(compliment).flat()));
