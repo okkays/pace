@@ -44,15 +44,16 @@
   <mat-icon class="narrow-only">arrow_drop_down</mat-icon>
   <mat-card class="result">
     <span class="result-text">{{result}}</span>
-    <button (click)="selectConversion(result)" mat-button>
-      <mat-icon>arrow_downward</mat-icon>
-    </button>
     <button [matMenuTriggerFor]="conversionMenu" mat-button>
       <mat-icon>more_vert</mat-icon>
     </button>
   </mat-card>
 
   <mat-menu #conversionMenu="matMenu">
+    <button (click)="selectConversion(result)" mat-menu-item>
+      <mat-icon>arrow_downward</mat-icon>
+      <span>Convert this value</span>
+    </button>
     <button (click)="copyToClipboard(result.toString())" mat-menu-item>
       <mat-icon>content_copy</mat-icon>
       <span>Copy to Clipboard</span>
