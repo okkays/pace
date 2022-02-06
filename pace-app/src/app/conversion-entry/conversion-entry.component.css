@@ -4,22 +4,23 @@
     padding-right:20px;
   }
 
+  .pace-entry {
+    width: 100%;
+  }
+
   .result {
     margin-bottom: 10px;
-    width: 100%;
+    width: calc(100% - 10px);
     margin-left: 20px;
+    margin-right: 0px;
   }
 
   .cancel {
     margin-left: 20px;
   }
-
-  .result button {
-    width: 100%;
-  }
 }
 
-@media all and (min-width:1001px) {
+@media all and (min-width: 1001px) {
   .input-wrapper {
     flex-direction: row;
   }
@@ -38,12 +39,29 @@ app-pace-entry {
   font-size: 2em;
 }
 
+mat-card.result {
+  padding: 5px;
+}
+
+.result {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  background-color: #555;
+}
+
 .result button {
   font-size: 1.5em;
 }
 
-.result mat-icon {
-  font-size: .75em;
+.result span.result-text {
+  flex-grow: 1;
+  font-size: 1.25em;
+  line-height: 2.75em;
+  margin-left: 5px;
+  padding-left: 5px;
+  text-align: left;
 }
 
 .pace-entry {

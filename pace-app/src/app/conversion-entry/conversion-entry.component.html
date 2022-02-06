@@ -27,8 +27,11 @@
       </ng-container>
     </ng-container>
 
-    <div class="cancel" *ngIf="!!initialFrom">
-      <button (click)="cancelClicked.emit()" mat-icon-button>
+    <div class="cancel">
+      <button *ngIf="!!initialFrom" (click)="cancelClicked.emit()" mat-icon-button>
+        <mat-icon>delete</mat-icon>
+      </button>
+      <button *ngIf="!initialFrom" disabled mat-icon-button>
         <mat-icon>delete</mat-icon>
       </button>
     </div>
@@ -36,14 +39,15 @@
 </mat-card>
 
 <ng-template #resultDisplay let-result="result">
-  <div class="equals">
-    <p>=</p>
-  </div>
-
-  <div class="result">
-    <button (click)="selectConversion(result)" mat-button>
+  <mat-icon class="wide-only">arrow_right</mat-icon>
+  <mat-icon class="narrow-only">arrow_drop_down</mat-icon>
+  <mat-card class="result">
+    <span class="result-text">{{result}}</span>
+    <button (click)="copyToClipboard(result.toString())" mat-button>
       <mat-icon>content_copy</mat-icon>
     </button>
-    {{result}}
-  </div>
+    <button (click)="selectConversion(result)" mat-button>
+      <mat-icon>arrow_downward</mat-icon>
+    </button>
+  </mat-card>
 </ng-template>

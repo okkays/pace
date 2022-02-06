@@ -76,7 +76,6 @@ export class ConversionEntryComponent {
 
   selectConversion(conversion: Metric) {
     this.conversionSelected.next(conversion);
-    this.copyToClipboard(conversion.toString())
   }
 
   copyToClipboard(content: string) {
