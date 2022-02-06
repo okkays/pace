@@ -4,17 +4,17 @@
       <app-pace-entry
         [initial]="initialFrom"
         (metricsSelected)="fromSubject$.next($event)"
-        label="from" placeholder="5 kph"></app-pace-entry>
+        label="from" placeholder="e.g. 5 kph"></app-pace-entry>
       <app-pace-entry
         (metricsSelected)="toSubject$.next($event)"
         [allowValues]="false"
         [matchUnitOf$]="fromSubject$"
-        label="to" placeholder="min/km"></app-pace-entry>
+        label="to" placeholder="e.g. min/mi"></app-pace-entry>
       <app-pace-entry
         (metricsSelected)="forOrAtSubject$.next($event)"
         [requireValues]="true"
         [matchUnitOf$]="forOrAtCompliment$"
-        label="for/at/in" placeholder="6 hours"></app-pace-entry>
+        label="for/at/in" placeholder="e.g. 6 hours"></app-pace-entry>
     </div>
 
     <ng-container *ngIf="convertedMetric$ | async as result">
