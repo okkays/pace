@@ -1,5 +1,5 @@
 import {InvalidMetric, Metric} from './metric';
-import {parseHms, parseValue} from './util';
+import {parseHms, parseValue, round} from './util';
 
 export const DURATIONS = [
   'second',
@@ -45,7 +45,7 @@ export class Duration extends Metric {
 
   toString(): string {
     const unit = this.isPlural() ? pluralizeDuration(this.unit) : this.unit;
-    const value = this.value === null ? '' : `${this.value} `;
+    const value = this.value === null ? '' : `${round(this.value, 2)} `;
     return `${value} ${unit}`;
   }
 

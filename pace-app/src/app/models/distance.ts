@@ -1,5 +1,5 @@
 import {InvalidMetric, Metric} from './metric';
-import {parseValue} from './util';
+import {parseValue, round} from './util';
 
 export const DISTANCES = [
   'foot',
@@ -42,7 +42,7 @@ export class Distance extends Metric {
 
   toString(): string {
     const unit = this.isPlural() ? pluralizeDistance(this.unit) : this.unit;
-    const value = this.value === null ? '' : `${this.value} `;
+    const value = this.value === null ? '' : `${round(this.value, 2)} `;
     return `${value} ${unit}`;
   }
 

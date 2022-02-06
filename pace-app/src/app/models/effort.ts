@@ -76,14 +76,14 @@ export function suggest(metric: Metric): Metric[] {
 }
 
 // Use '/' as the separate for paces.
-const SUGGESTION_GROUPS = [
+export const SUGGESTION_GROUPS = [
   // Pace
   ['mile/hour', 'kilometer/hour', 'minute/mile', 'minute/kilometer'],
 
   // Distance
   ['kilometer', 'mile'],
   ['kilometer', 'meter'],
-  ['mile', 'feet'],
+  ['mile', 'foot'],
 
   // Duration
   ['hour', 'minute', 'second', 'day'],
@@ -100,7 +100,6 @@ function getUnitForSuggestions(metric: Metric): string|null {
 
 function suggestFromGroups(metric: Metric): Metric[] {
   const targetUnit = getUnitForSuggestions(metric);
-  console.log(targetUnit);
   if (!targetUnit) return [];
   return SUGGESTION_GROUPS
       .flatMap(group => {

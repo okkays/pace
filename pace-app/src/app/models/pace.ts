@@ -1,7 +1,7 @@
 import {abbreviateDistance, Distance, DISTANCES, parseDistance, pluralizeDistance} from './distance';
 import {abbreviateDuration, Duration, DURATIONS, parseDuration, pluralizeDuration} from './duration';
 import {InvalidMetric, Metric} from './metric';
-import {getHms, getMs} from './util';
+import {getHms, getMs, round} from './util';
 
 type PaceMetric = Distance|Duration;
 
@@ -176,7 +176,7 @@ export class Pace extends Metric {
     if (this.left.unit === 'hour') {
       return getHms(this.value) + ' ';
     }
-    return String(this.value) + ' ';
+    return String(round(this.value, 2)) + ' ';
   }
 
   toString(): string {

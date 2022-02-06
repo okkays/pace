@@ -1,8 +1,9 @@
 import {Distance, parseDistance} from './distance';
 import {Duration, parseDuration} from './duration';
-import {compliment, forOrAt, suggest} from './effort';
+import {compliment, forOrAt, suggest, SUGGESTION_GROUPS} from './effort';
 import {assertValid, InvalidMetric} from './metric';
 import {Pace, parsePace} from './pace';
+import {parseMetrics} from './parsers';
 
 describe('forOrAt', () => {
   it('should not accept duration squared', () => {
@@ -66,12 +67,29 @@ describe('suggestFromGroups', () => {
     ]);
   });
 
-  it('handles paces correctly', () => {
+  it('handles pace separators correctly', () => {
     const baseMetric = assertValid(parsePace('5 kph'));
     expect(suggest(baseMetric)).toEqual([
       assertValid(baseMetric.toUnit('mile/hour')),
       assertValid(baseMetric.toUnit('minute/mile')),
       assertValid(baseMetric.toUnit('minute/kilometer')),
     ]);
+  });
+
+  it('handles paces correctly', () => {
+    const baseMetric = assertValid(parsePace('1 kilometer/hour'));
+    expect(suggest(baseMetric)).toEqual([
+      assertValid(baseMetric.toUnit('mile/hour')),
+      assertValid(baseMetric.toUnit('minute/mile')),
+      assertValid(baseMetric.toUnit('minute/kilometer')),
+    ]);
+  });
+
+  it('only uses valid metrics', () => {
+    const metrics =
+        SUGGESTION_GROUPS.flat().flatMap(unit => parseMetrics(unit));
+    for (const metric of metrics) {
+      expect(metric.isValid()).withContext(String(metric.unit)).toBeTrue();
+    }
   });
 });

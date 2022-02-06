@@ -55,3 +55,9 @@ export function parseHms(metric: string): number|null {
   }
   return null;
 }
+
+export function round(unrounded: number, places: number) {
+  return +(
+      Math.round((unrounded + 'e+' + places) as unknown as number) + 'e-' +
+      places);
+}
