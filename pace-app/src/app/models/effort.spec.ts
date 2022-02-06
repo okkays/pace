@@ -1,6 +1,6 @@
-import {parseDistance} from './distance';
-import {parseDuration} from './duration';
-import {forOrAt} from './effort';
+import {Distance, parseDistance} from './distance';
+import {Duration, parseDuration} from './duration';
+import {compliment, forOrAt} from './effort';
 import {InvalidMetric} from './metric';
 import {Pace, parsePace} from './pace';
 
@@ -42,5 +42,17 @@ describe('forOrAt', () => {
   it('should accept pace for distance', () => {
     expect(forOrAt(parsePace('5kph'), parseDistance('15km')))
         .toEqual(parseDuration('3 hours'));
+  });
+});
+
+const EMPTY_DURATION = new Duration(null, 'minute');
+const EMPTY_DISTANCE = new Distance(null, 'meter');
+const EMPTY_PACE = new Pace(EMPTY_DURATION, '/', EMPTY_DISTANCE);
+
+describe('forOrAt', () => {
+  it('should compliment durations', () => {
+    expect(compliment(EMPTY_DURATION)).toEqual([EMPTY_DISTANCE, EMPTY_PACE]);
+    expect(compliment(EMPTY_DISTANCE)).toEqual([EMPTY_DURATION, EMPTY_PACE]);
+    expect(compliment(EMPTY_PACE)).toEqual([EMPTY_DURATION, EMPTY_DISTANCE]);
   });
 });

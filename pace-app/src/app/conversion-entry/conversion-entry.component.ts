@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {combineLatest, Observable, ReplaySubject} from 'rxjs';
 import {map, shareReplay, startWith, tap} from 'rxjs/operators';
 import {Action} from '../models/action';
-import {forOrAt} from '../models/effort';
+import {compliment, forOrAt} from '../models/effort';
 import {Metric} from '../models/metric';
 
 @Component({
@@ -18,6 +18,9 @@ export class ConversionEntryComponent {
   fromSubject$ = new ReplaySubject<Metric[]>(1);
   toSubject$ = new ReplaySubject<Metric[]>(1);
   forOrAtSubject$ = new ReplaySubject<Metric[]>(1);
+
+  forOrAtCompliment$: Observable<Metric[]> = this.fromSubject$.pipe(
+      map(fromMetrics => fromMetrics.map(compliment).flat()));
 
   convertedMetric$: Observable<Metric|null> =
       combineLatest([this.fromSubject$, this.toSubject$])

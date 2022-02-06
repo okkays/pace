@@ -13,6 +13,7 @@
       <app-pace-entry
         (metricsSelected)="forOrAtSubject$.next($event)"
         [requireValues]="true"
+        [matchUnitOf$]="forOrAtCompliment$"
         label="for/at/in" placeholder="6 hours"></app-pace-entry>
     </div>
 

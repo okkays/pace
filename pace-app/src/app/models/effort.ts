@@ -54,3 +54,14 @@ export function forOrAt(
   }
   return new InvalidMetric(null, left.unit);
 }
+
+export function compliment(metric: Metric): Metric[] {
+  const duration = new Duration(null, 'minute');
+  const distance = new Distance(null, 'meter');
+  const pace = new Pace(duration, '/', distance);
+
+  if (metric instanceof Distance) return [duration, pace];
+  if (metric instanceof Duration) return [distance, pace];
+  if (metric instanceof Pace) return [duration, distance];
+  return [];
+}
