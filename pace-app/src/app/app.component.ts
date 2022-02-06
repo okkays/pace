@@ -15,9 +15,7 @@ export class AppComponent {
   conversions$: Observable<Array<Metric|null>> =
       merge(
           this.conversionsSubject.pipe(map(added => ({added}))),
-          this.deletedSubject.pipe(
-              tap(deleted => console.log(deleted)),
-              map(deleted => ({deleted}))),
+          this.deletedSubject.pipe(map(deleted => ({deleted}))),
           )
           .pipe(
               scan<{deleted?: Metric, added?: Metric|null}, Array<Metric|null>>(
@@ -31,6 +29,5 @@ export class AppComponent {
                   },
                   [null]),
               startWith([null]),
-              tap(conversion => console.log(conversion)),
           );
 }

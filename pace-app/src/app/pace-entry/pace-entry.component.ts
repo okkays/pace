@@ -39,7 +39,6 @@ export class PaceEntryComponent implements OnInit, AfterViewInit {
       this.matchUnitOf$ = of([]);
     }
     this.enteredMetrics$ = this.actionControl.valueChanges.pipe(
-        tap(value => console.log(value)),
         tap(() => this.metricsSelected.next([])),
         filter(text => {
           if (typeof text !== 'string') {
