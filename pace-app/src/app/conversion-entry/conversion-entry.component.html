@@ -18,27 +18,13 @@
     </div>
 
     <ng-container *ngIf="convertedMetric$ | async as result">
-      <div class="equals">
-        <p>=</p>
-      </div>
-
-      <div class="result">
-        <button (click)="selectConversion(result)" mat-button>
-          {{result}} <mat-icon>content_copy</mat-icon>
-        </button>
-      </div>
+      <ng-container *ngTemplateOutlet="resultDisplay;context:{result: result}">
+      </ng-container>
     </ng-container>
 
     <ng-container *ngIf="convertedEffort$ | async as result">
-      <div class="equals">
-        <p>=</p>
-      </div>
-
-      <div class="result">
-        <button (click)="selectConversion(result)" mat-button>
-          {{result}} <mat-icon>content_copy</mat-icon>
-        </button>
-      </div>
+      <ng-container *ngTemplateOutlet="resultDisplay;context:{result: result}">
+      </ng-container>
     </ng-container>
 
     <div class="cancel" *ngIf="!!initialFrom">
@@ -48,3 +34,16 @@
     </div>
   </div>
 </mat-card>
+
+<ng-template #resultDisplay let-result="result">
+  <div class="equals">
+    <p>=</p>
+  </div>
+
+  <div class="result">
+    <button (click)="selectConversion(result)" mat-button>
+      <mat-icon>content_copy</mat-icon>
+    </button>
+    {{result}}
+  </div>
+</ng-template>
