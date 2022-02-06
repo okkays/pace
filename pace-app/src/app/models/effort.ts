@@ -1,6 +1,6 @@
 import {Distance} from './distance';
 import {Duration} from './duration';
-import {InvalidMetric, Metric} from './metric';
+import {assertValid, InvalidMetric, Metric} from './metric';
 import {Pace} from './pace';
 
 /** Produces the "effort" by doing left for/at right */
@@ -64,4 +64,48 @@ export function compliment(metric: Metric): Metric[] {
   if (metric instanceof Duration) return [distance, pace];
   if (metric instanceof Pace) return [duration, distance];
   return [];
+}
+
+/**
+ * Returns a few quick conversions based on a given metric.
+ *
+ * Follows the good UX advice of trying to read the user's mind.
+ */
+export function suggest(metric: Metric): Metric[] {
+  return suggestFromGroups(metric);
+}
+
+// Use '/' as the separate for paces.
+export const SUGGESTION_GROUPS = [
+  // Pace
+  ['mile/hour', 'kilometer/hour', 'minute/mile', 'minute/kilometer'],
+
+  // Distance
+  ['kilometer', 'mile'],
+  ['kilometer', 'meter'],
+  ['mile', 'foot'],
+
+  // Duration
+  ['hour', 'minute', 'second', 'day'],
+];
+
+function getUnitForSuggestions(metric: Metric): string|null {
+  if (metric instanceof Distance) return metric.unit;
+  if (metric instanceof Duration) return metric.unit;
+  if (metric instanceof Pace) {
+    return [metric.left.unit, metric.right.unit].join('/');
+  }
+  return null;
+}
+
+function suggestFromGroups(metric: Metric): Metric[] {
+  const targetUnit = getUnitForSuggestions(metric);
+  if (!targetUnit) return [];
+  return SUGGESTION_GROUPS
+      .flatMap(group => {
+        if (!group.includes(targetUnit)) return [];
+        return group.filter(unit => unit !== targetUnit);
+      })
+      .map(suggestedUnit => metric.toUnit(suggestedUnit))
+      .map(assertValid);
 }

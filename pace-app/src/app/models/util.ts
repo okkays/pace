@@ -11,15 +11,11 @@ export function getHms(minutes: number): string {
   const minutePortion = Math.floor(minutes % 60);
   const secondPortion = Math.round((minutes % 1) * 60);
 
-  const paddedHours = hourPortion;
+  const paddedHours = String(hourPortion).padStart(2, '0');
   const paddedMinute = String(minutePortion).padStart(2, '0');
   const paddedSecond = String(secondPortion).padStart(2, '0');
 
-  const resultingPortions = [];
-
-  if (hourPortion !== 0) resultingPortions.push(hourPortion);
-  resultingPortions.push(minutePortion);
-  resultingPortions.push(secondPortion);
+  if (secondPortion === 0 && minutePortion === 0) return String(hourPortion);
 
   return `${paddedHours}:${paddedMinute}:${paddedSecond}`;
 }
@@ -31,10 +27,7 @@ export function getMs(minutes: number): string {
   const paddedMinute = minutePortion;
   const paddedSecond = String(secondPortion).padStart(2, '0');
 
-  const resultingPortions = [];
-
-  resultingPortions.push(minutePortion);
-  resultingPortions.push(secondPortion);
+  if (secondPortion === 0) return String(minutePortion);
 
   return `${paddedMinute}:${paddedSecond}`;
 }
@@ -54,4 +47,10 @@ export function parseHms(metric: string): number|null {
     return (60 * 60 * hours) + (60 * minutes) + seconds;
   }
   return null;
+}
+
+export function round(unrounded: number, places: number) {
+  return +(
+      Math.round((unrounded + 'e+' + places) as unknown as number) + 'e-' +
+      places);
 }

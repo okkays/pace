@@ -1,17 +1,18 @@
 import {Clipboard} from '@angular/cdk/clipboard';
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {combineLatest, Observable, ReplaySubject} from 'rxjs';
 import {map, shareReplay, startWith, tap} from 'rxjs/operators';
 
 import {Action} from '../models/action';
-import {compliment, forOrAt} from '../models/effort';
+import {compliment, forOrAt, suggest} from '../models/effort';
 import {Metric} from '../models/metric';
 
 @Component({
   selector: 'app-conversion-entry',
   templateUrl: './conversion-entry.component.html',
-  styleUrls: ['./conversion-entry.component.css']
+  styleUrls: ['./conversion-entry.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConversionEntryComponent {
   @Output() conversionSelected = new EventEmitter<Metric>();
@@ -22,8 +23,17 @@ export class ConversionEntryComponent {
   toSubject$ = new ReplaySubject<Metric[]>(1);
   forOrAtSubject$ = new ReplaySubject<Metric[]>(1);
 
+  suggest(metric: Metric): Array<{metric: Metric, index: number}> {
+    return suggest(metric).map((metric, index) => ({metric, index}));
+  }
+
+  /** For use with trackBy. */
+  getIndex(index: number, item: {index: number}): number {
+    return item.index;
+  }
+
   forOrAtCompliment$: Observable<Metric[]> = this.fromSubject$.pipe(
-      map(fromMetrics => fromMetrics.map(compliment).flat()));
+      map(fromMetrics => fromMetrics.flatMap(compliment)));
 
   convertedMetric$: Observable<Metric|null> =
       combineLatest([this.fromSubject$, this.toSubject$])
@@ -57,14 +67,11 @@ export class ConversionEntryComponent {
                 if (!fromMetrics.length) {
                   return null;
                 }
-                const potentialMetrics =
-                    fromMetrics
-                        .map(fromMetric => {
-                          return forOrAts.map(forOrAtMetric => {
-                            return forOrAt(fromMetric, forOrAtMetric);
-                          });
-                        })
-                        .flat();
+                const potentialMetrics = fromMetrics.flatMap(fromMetric => {
+                  return forOrAts.map(forOrAtMetric => {
+                    return forOrAt(fromMetric, forOrAtMetric);
+                  });
+                });
                 for (const metric of potentialMetrics) {
                   if (metric.isValid()) return metric;
                 }
@@ -76,7 +83,6 @@ export class ConversionEntryComponent {
 
   selectConversion(conversion: Metric) {
     this.conversionSelected.next(conversion);
-    this.copyToClipboard(conversion.toString())
   }
 
   copyToClipboard(content: string) {

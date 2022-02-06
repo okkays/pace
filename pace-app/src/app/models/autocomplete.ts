@@ -28,7 +28,7 @@ export function getMetricOptions(
 }
 
 function getDistanceOptions(metric: Distance|InvalidMetric): string[] {
-  const distances = DISTANCES.map(abbreviateDistance).flat();
+  const distances = DISTANCES.flatMap(abbreviateDistance);
 
   if (metric.isPlural()) {
     return distances.map(distance => pluralizeDistance(distance));
@@ -37,7 +37,7 @@ function getDistanceOptions(metric: Distance|InvalidMetric): string[] {
 }
 
 function getDurationOptions(metric: Duration|InvalidMetric): string[] {
-  const durations = DURATIONS.map(abbreviateDuration).flat();
+  const durations = DURATIONS.flatMap(abbreviateDuration);
 
   if (metric.isPlural()) {
     return durations.map(duration => pluralizeDuration(duration));

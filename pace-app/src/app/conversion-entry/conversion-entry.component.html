@@ -4,47 +4,64 @@
       <app-pace-entry
         [initial]="initialFrom"
         (metricsSelected)="fromSubject$.next($event)"
-        label="from" placeholder="5 kph"></app-pace-entry>
+        label="from" placeholder="e.g. 5 kph"></app-pace-entry>
       <app-pace-entry
         (metricsSelected)="toSubject$.next($event)"
         [allowValues]="false"
         [matchUnitOf$]="fromSubject$"
-        label="to" placeholder="min/km"></app-pace-entry>
+        label="to" placeholder="e.g. min/mi"></app-pace-entry>
       <app-pace-entry
         (metricsSelected)="forOrAtSubject$.next($event)"
         [requireValues]="true"
         [matchUnitOf$]="forOrAtCompliment$"
-        label="for/at/in" placeholder="6 hours"></app-pace-entry>
+        label="for/at/in" placeholder="e.g. 6 hours"></app-pace-entry>
     </div>
 
     <ng-container *ngIf="convertedMetric$ | async as result">
-      <div class="equals">
-        <p>=</p>
-      </div>
-
-      <div class="result">
-        <button (click)="selectConversion(result)" mat-button>
-          {{result}} <mat-icon>content_copy</mat-icon>
-        </button>
-      </div>
+      <ng-container *ngTemplateOutlet="resultDisplay;context:{result: result}">
+      </ng-container>
     </ng-container>
 
     <ng-container *ngIf="convertedEffort$ | async as result">
-      <div class="equals">
-        <p>=</p>
-      </div>
-
-      <div class="result">
-        <button (click)="selectConversion(result)" mat-button>
-          {{result}} <mat-icon>content_copy</mat-icon>
-        </button>
-      </div>
+      <ng-container *ngTemplateOutlet="resultDisplay;context:{result: result}">
+      </ng-container>
     </ng-container>
 
-    <div class="cancel" *ngIf="!!initialFrom">
-      <button (click)="cancelClicked.emit()" mat-icon-button>
+    <div class="cancel">
+      <button *ngIf="!!initialFrom" (click)="cancelClicked.emit()"
+          mat-raised-button>
+        <mat-icon>delete</mat-icon>
+      </button>
+      <button *ngIf="!initialFrom" disabled mat-raised-button>
         <mat-icon>delete</mat-icon>
       </button>
     </div>
   </div>
 </mat-card>
+
+<ng-template #resultDisplay let-result="result">
+  <mat-icon class="wide-only">arrow_right</mat-icon>
+  <mat-icon class="narrow-only">arrow_drop_down</mat-icon>
+  <mat-card class="result">
+    <span class="result-text">{{result}}</span>
+    <button [matMenuTriggerFor]="conversionMenu" mat-button>
+      <mat-icon>more_vert</mat-icon>
+    </button>
+  </mat-card>
+
+  <mat-menu #conversionMenu="matMenu">
+    <button (click)="selectConversion(result)" mat-menu-item>
+      <mat-icon>arrow_downward</mat-icon>
+      <span>Convert this value</span>
+    </button>
+    <button (click)="copyToClipboard(result.toString())" mat-menu-item>
+      <mat-icon>content_copy</mat-icon>
+      <span>Copy to Clipboard</span>
+    </button>
+    <button *ngFor="let suggestion of suggest(result); trackBy getIndex"
+      (click)="selectConversion(suggestion.metric)" mat-menu-item>
+      <mat-icon>auto_awesome</mat-icon>
+      <span>{{suggestion.metric}}</span>
+    </button>
+  </mat-menu>
+</ng-template>

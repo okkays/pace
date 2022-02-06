@@ -1,8 +1,9 @@
 import {Distance, parseDistance} from './distance';
 import {Duration, parseDuration} from './duration';
-import {compliment, forOrAt} from './effort';
-import {InvalidMetric} from './metric';
+import {compliment, forOrAt, suggest, SUGGESTION_GROUPS} from './effort';
+import {assertValid, InvalidMetric} from './metric';
 import {Pace, parsePace} from './pace';
+import {parseMetrics} from './parsers';
 
 describe('forOrAt', () => {
   it('should not accept duration squared', () => {
@@ -54,5 +55,41 @@ describe('forOrAt', () => {
     expect(compliment(EMPTY_DURATION)).toEqual([EMPTY_DISTANCE, EMPTY_PACE]);
     expect(compliment(EMPTY_DISTANCE)).toEqual([EMPTY_DURATION, EMPTY_PACE]);
     expect(compliment(EMPTY_PACE)).toEqual([EMPTY_DURATION, EMPTY_DISTANCE]);
+  });
+});
+
+describe('suggestFromGroups', () => {
+  it('should convert between suggested groups', () => {
+    const baseMetric = assertValid(parseDistance('5 km'));
+    expect(suggest(baseMetric)).toEqual([
+      assertValid(baseMetric.toUnit('mile')),
+      assertValid(baseMetric.toUnit('meter')),
+    ]);
+  });
+
+  it('handles pace separators correctly', () => {
+    const baseMetric = assertValid(parsePace('5 kph'));
+    expect(suggest(baseMetric)).toEqual([
+      assertValid(baseMetric.toUnit('mile/hour')),
+      assertValid(baseMetric.toUnit('minute/mile')),
+      assertValid(baseMetric.toUnit('minute/kilometer')),
+    ]);
+  });
+
+  it('handles paces correctly', () => {
+    const baseMetric = assertValid(parsePace('1 kilometer/hour'));
+    expect(suggest(baseMetric)).toEqual([
+      assertValid(baseMetric.toUnit('mile/hour')),
+      assertValid(baseMetric.toUnit('minute/mile')),
+      assertValid(baseMetric.toUnit('minute/kilometer')),
+    ]);
+  });
+
+  it('only uses valid metrics', () => {
+    const metrics =
+        SUGGESTION_GROUPS.flat().flatMap(unit => parseMetrics(unit));
+    for (const metric of metrics) {
+      expect(metric.isValid()).withContext(String(metric.unit)).toBeTrue();
+    }
   });
 });

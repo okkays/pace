@@ -1,7 +1,7 @@
 import {abbreviateDistance, Distance, DISTANCES, parseDistance, pluralizeDistance} from './distance';
 import {abbreviateDuration, Duration, DURATIONS, parseDuration, pluralizeDuration} from './duration';
 import {InvalidMetric, Metric} from './metric';
-import {getHms, getMs} from './util';
+import {getHms, getMs, round} from './util';
 
 type PaceMetric = Distance|Duration;
 
@@ -9,8 +9,8 @@ export const PACES: string[] = [];
 
 const PLURAL_PACES = new Map<string, string>();
 
-for (const distance of DISTANCES.map(abbreviateDistance).flat()) {
-  for (const duration of DURATIONS.map(abbreviateDuration).flat()) {
+for (const distance of DISTANCES.flatMap(abbreviateDistance)) {
+  for (const duration of DURATIONS.flatMap(abbreviateDuration)) {
     for (const separator of ['/', ' per ']) {
       const distanceFirst = `${distance}${separator}${duration}`;
       const distanceFirstPlural =
@@ -174,9 +174,9 @@ export class Pace extends Metric {
       return getMs(this.value) + ' ';
     }
     if (this.left.unit === 'hour') {
-      return getHms(this.value) + ' ';
+      return getHms(this.value * 60) + ' ';
     }
-    return String(this.value) + ' ';
+    return String(round(this.value, 2)) + ' ';
   }
 
   toString(): string {
