@@ -8,6 +8,7 @@
 
 <app-conversion-entry
   *ngFor="let conversion of conversions$ | async"
+  #conversion
   [initialFrom]="conversion || undefined"
   (conversionSelected)="conversionsSubject.next($event)"
   (cancelClicked)="!conversion || deletedSubject.next(conversion)">
