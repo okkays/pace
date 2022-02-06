@@ -75,9 +75,8 @@ export class PaceEntryComponent implements OnInit, AfterViewInit {
                   const prefix = text.substr(0, text.length - unitText.length);
                   const options = (metrics instanceof InvalidMetric) ?
                       getMetricOptions(metrics, matchMetrics) :
-                      metrics
-                          .map(metric => getMetricOptions(metric, matchMetrics))
-                          .flat();
+                      metrics.flatMap(
+                          metric => getMetricOptions(metric, matchMetrics));
 
                   return {
                     prefix,

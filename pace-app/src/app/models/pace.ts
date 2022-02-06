@@ -9,8 +9,8 @@ export const PACES: string[] = [];
 
 const PLURAL_PACES = new Map<string, string>();
 
-for (const distance of DISTANCES.map(abbreviateDistance).flat()) {
-  for (const duration of DURATIONS.map(abbreviateDuration).flat()) {
+for (const distance of DISTANCES.flatMap(abbreviateDistance)) {
+  for (const duration of DURATIONS.flatMap(abbreviateDuration)) {
     for (const separator of ['/', ' per ']) {
       const distanceFirst = `${distance}${separator}${duration}`;
       const distanceFirstPlural =

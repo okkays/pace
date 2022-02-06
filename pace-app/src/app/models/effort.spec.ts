@@ -1,7 +1,7 @@
 import {Distance, parseDistance} from './distance';
 import {Duration, parseDuration} from './duration';
-import {compliment, forOrAt} from './effort';
-import {InvalidMetric} from './metric';
+import {compliment, forOrAt, suggest} from './effort';
+import {assertValid, InvalidMetric} from './metric';
 import {Pace, parsePace} from './pace';
 
 describe('forOrAt', () => {
@@ -54,5 +54,24 @@ describe('forOrAt', () => {
     expect(compliment(EMPTY_DURATION)).toEqual([EMPTY_DISTANCE, EMPTY_PACE]);
     expect(compliment(EMPTY_DISTANCE)).toEqual([EMPTY_DURATION, EMPTY_PACE]);
     expect(compliment(EMPTY_PACE)).toEqual([EMPTY_DURATION, EMPTY_DISTANCE]);
+  });
+});
+
+describe('suggestFromGroups', () => {
+  it('should convert between suggested groups', () => {
+    const baseMetric = assertValid(parseDistance('5 km'));
+    expect(suggest(baseMetric)).toEqual([
+      assertValid(baseMetric.toUnit('mile')),
+      assertValid(baseMetric.toUnit('meter')),
+    ]);
+  });
+
+  it('handles paces correctly', () => {
+    const baseMetric = assertValid(parsePace('5 kph'));
+    expect(suggest(baseMetric)).toEqual([
+      assertValid(baseMetric.toUnit('mile/hour')),
+      assertValid(baseMetric.toUnit('minute/mile')),
+      assertValid(baseMetric.toUnit('minute/kilometer')),
+    ]);
   });
 });

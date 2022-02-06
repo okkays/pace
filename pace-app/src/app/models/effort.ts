@@ -72,23 +72,41 @@ export function compliment(metric: Metric): Metric[] {
  * Follows the good UX advice of trying to read the user's mind.
  */
 export function suggest(metric: Metric): Metric[] {
-  if (metric instanceof Distance) return suggestForDistance(metric);
-  if (metric instanceof Duration) return suggestForDuration(metric);
-  if (metric instanceof Pace) return suggestForPace(metric);
-  return [];
+  return suggestFromGroups(metric);
 }
 
-function suggestForDistance(metric: Distance): Metric[] {
-  if (metric.unit === 'kilometer') {
-    return [metric.toUnit('mile')].map(assertValid);
+// Use '/' as the separate for paces.
+const SUGGESTION_GROUPS = [
+  // Pace
+  ['mile/hour', 'kilometer/hour', 'minute/mile', 'minute/kilometer'],
+
+  // Distance
+  ['kilometer', 'mile'],
+  ['kilometer', 'meter'],
+  ['mile', 'feet'],
+
+  // Duration
+  ['hour', 'minute', 'second', 'day'],
+];
+
+function getUnitForSuggestions(metric: Metric): string|null {
+  if (metric instanceof Distance) return metric.unit;
+  if (metric instanceof Duration) return metric.unit;
+  if (metric instanceof Pace) {
+    return [metric.left.unit, metric.right.unit].join('/');
   }
-  return [];
+  return null;
 }
 
-function suggestForDuration(metric: Duration): Metric[] {
-  return [];
-}
-
-function suggestForPace(metric: Pace): Metric[] {
-  return [];
+function suggestFromGroups(metric: Metric): Metric[] {
+  const targetUnit = getUnitForSuggestions(metric);
+  console.log(targetUnit);
+  if (!targetUnit) return [];
+  return SUGGESTION_GROUPS
+      .flatMap(group => {
+        if (!group.includes(targetUnit)) return [];
+        return group.filter(unit => unit !== targetUnit);
+      })
+      .map(suggestedUnit => metric.toUnit(suggestedUnit))
+      .map(assertValid);
 }

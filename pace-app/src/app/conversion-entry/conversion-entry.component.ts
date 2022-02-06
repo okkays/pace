@@ -33,7 +33,7 @@ export class ConversionEntryComponent {
   }
 
   forOrAtCompliment$: Observable<Metric[]> = this.fromSubject$.pipe(
-      map(fromMetrics => fromMetrics.map(compliment).flat()));
+      map(fromMetrics => fromMetrics.flatMap(compliment)));
 
   convertedMetric$: Observable<Metric|null> =
       combineLatest([this.fromSubject$, this.toSubject$])
@@ -67,14 +67,11 @@ export class ConversionEntryComponent {
                 if (!fromMetrics.length) {
                   return null;
                 }
-                const potentialMetrics =
-                    fromMetrics
-                        .map(fromMetric => {
-                          return forOrAts.map(forOrAtMetric => {
-                            return forOrAt(fromMetric, forOrAtMetric);
-                          });
-                        })
-                        .flat();
+                const potentialMetrics = fromMetrics.flatMap(fromMetric => {
+                  return forOrAts.map(forOrAtMetric => {
+                    return forOrAt(fromMetric, forOrAtMetric);
+                  });
+                });
                 for (const metric of potentialMetrics) {
                   if (metric.isValid()) return metric;
                 }
