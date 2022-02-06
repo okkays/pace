@@ -72,6 +72,10 @@ mat-card.result {
   flex-grow: 1;
 }
 
+.cancel button {
+  padding: 10px;
+}
+
 .cancel {
   margin-right:15px;
 }

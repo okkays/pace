@@ -28,10 +28,11 @@
     </ng-container>
 
     <div class="cancel">
-      <button *ngIf="!!initialFrom" (click)="cancelClicked.emit()" mat-icon-button>
+      <button *ngIf="!!initialFrom" (click)="cancelClicked.emit()"
+          mat-raised-button color="warn">
         <mat-icon>delete</mat-icon>
       </button>
-      <button *ngIf="!initialFrom" disabled mat-icon-button>
+      <button *ngIf="!initialFrom" disabled mat-raised-button>
         <mat-icon>delete</mat-icon>
       </button>
     </div>
