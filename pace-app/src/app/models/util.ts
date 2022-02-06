@@ -15,11 +15,7 @@ export function getHms(minutes: number): string {
   const paddedMinute = String(minutePortion).padStart(2, '0');
   const paddedSecond = String(secondPortion).padStart(2, '0');
 
-  const resultingPortions = [];
-
-  if (hourPortion !== 0) resultingPortions.push(hourPortion);
-  resultingPortions.push(minutePortion);
-  resultingPortions.push(secondPortion);
+  if (secondPortion === 0 && minutePortion === 0) return String(hourPortion);
 
   return `${paddedHours}:${paddedMinute}:${paddedSecond}`;
 }
@@ -31,10 +27,7 @@ export function getMs(minutes: number): string {
   const paddedMinute = minutePortion;
   const paddedSecond = String(secondPortion).padStart(2, '0');
 
-  const resultingPortions = [];
-
-  resultingPortions.push(minutePortion);
-  resultingPortions.push(secondPortion);
+  if (secondPortion === 0) return String(minutePortion);
 
   return `${paddedMinute}:${paddedSecond}`;
 }

@@ -27,7 +27,7 @@ describe('Pace', () => {
         .toBeMetric(6, 'mile/hour');
 
     expect((parsePace('6 kph') as Pace).toUnit('min/km').toString())
-        .toBe('10:00 minutes/kilometer');
+        .toBe('10 minutes/kilometer');
 
     expect((parsePace('6 kph') as Pace).toUnit('sec/km').toString())
         .toBe('600 seconds/kilometer');
@@ -59,7 +59,7 @@ describe('Pace', () => {
         .toBe('00:00:30 hours/kilometer');
 
     expect((parsePace('1kph') as Pace).toUnit('hour/km').toString())
-        .toBe('01:00:00 hour/kilometer');
+        .toBe('1 hour/kilometer');
   });
 
   it('handles invalid conversions', () => {
