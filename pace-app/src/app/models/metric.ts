@@ -13,6 +13,7 @@ export abstract class Metric extends BaseMetric {
   isValid(): this is Metric {
     return true;
   }
+  abstract clone(): Metric;
 }
 
 export class InvalidMetric extends BaseMetric {

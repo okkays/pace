@@ -2,6 +2,7 @@
   <div class="input-wrapper">
     <div class="pace-entry">
       <app-pace-entry
+        [initial]="initialFrom"
         (metricsSelected)="fromSubject$.next($event)"
         label="from" placeholder="5 kph"></app-pace-entry>
       <app-pace-entry
@@ -21,7 +22,9 @@
       </div>
 
       <div class="result">
-        <p>{{result}}</p>
+        <button (click)="conversionSelected.emit(result)" mat-button>
+          {{result}}
+        </button>
       </div>
     </ng-container>
 
@@ -31,8 +34,16 @@
       </div>
 
       <div class="result">
-        <p>{{result}}</p>
+        <button (click)="conversionSelected.emit(result)" mat-button>
+          {{result}}
+        </button>
       </div>
     </ng-container>
+
+    <div class="cancel" *ngIf="!!initialFrom">
+      <button (click)="cancelClicked.emit()" mat-icon-button>
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
   </div>
 </mat-card>

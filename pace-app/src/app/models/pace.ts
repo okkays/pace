@@ -164,6 +164,10 @@ export class Pace extends Metric {
     }
   }
 
+  clone(): Pace {
+    return new Pace(this.left.clone(), this.separator, this.right.clone());
+  }
+
   private getStringValue(): string {
     if (this.value === null) return '';
     if (this.left.unit === 'minute') {
