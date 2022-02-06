@@ -11,7 +11,7 @@ export function getHms(minutes: number): string {
   const minutePortion = Math.floor(minutes % 60);
   const secondPortion = Math.round((minutes % 1) * 60);
 
-  const paddedHours = hourPortion;
+  const paddedHours = String(hourPortion).padStart(2, '0');
   const paddedMinute = String(minutePortion).padStart(2, '0');
   const paddedSecond = String(secondPortion).padStart(2, '0');
 

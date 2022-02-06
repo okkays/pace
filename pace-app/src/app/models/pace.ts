@@ -174,7 +174,7 @@ export class Pace extends Metric {
       return getMs(this.value) + ' ';
     }
     if (this.left.unit === 'hour') {
-      return getHms(this.value) + ' ';
+      return getHms(this.value * 60) + ' ';
     }
     return String(round(this.value, 2)) + ' ';
   }
