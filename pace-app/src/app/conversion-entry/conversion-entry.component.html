@@ -21,7 +21,9 @@
       </div>
 
       <div class="result">
-        <p>{{result}}</p>
+        <button (click)="conversionSelected.emit(result)" mat-button>
+          {{result}}
+        </button>
       </div>
     </ng-container>
 
@@ -31,7 +33,9 @@
       </div>
 
       <div class="result">
-        <p>{{result}}</p>
+        <button (click)="conversionSelected.emit(result)" mat-button>
+          {{result}}
+        </button>
       </div>
     </ng-container>
   </div>

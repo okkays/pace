@@ -6,4 +6,7 @@
   </mat-card-title>
 </mat-card>
 
-<app-conversion-entry></app-conversion-entry>
+<app-conversion-entry
+  *ngFor="let conversion of conversions$ | async"
+  (conversionSelected)="conversionsSubject.next($event)">
+</app-conversion-entry>
