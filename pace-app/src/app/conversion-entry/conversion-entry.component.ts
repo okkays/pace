@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {combineLatest, Observable, ReplaySubject} from 'rxjs';
 import {map, shareReplay, startWith, tap} from 'rxjs/operators';
 import {Action} from '../models/action';
@@ -12,6 +12,7 @@ import {Metric} from '../models/metric';
 })
 export class ConversionEntryComponent {
   @Output() conversionSelected = new EventEmitter<Metric>();
+  @Input() initialFrom?: Metric;
   actionSelected$ = new ReplaySubject<Action>(1);
   fromSubject$ = new ReplaySubject<Metric[]>(1);
   toSubject$ = new ReplaySubject<Metric[]>(1);

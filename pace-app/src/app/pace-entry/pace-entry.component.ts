@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {combineLatest, map, Observable, of} from 'rxjs';
 import {filter, startWith, tap} from 'rxjs/operators';
@@ -17,12 +17,13 @@ interface RawMetrics {
   templateUrl: './pace-entry.component.html',
   styleUrls: ['./pace-entry.component.css']
 })
-export class PaceEntryComponent implements OnInit {
+export class PaceEntryComponent implements OnInit, AfterViewInit {
   @Input() label: string = 'Pace';
   @Input() placeholder: string = '5 kph';
   @Input() matchUnitOf$!: Observable<Metric[]>;
   @Input() allowValues: boolean = true;
   @Input() requireValues: boolean = false;
+  @Input() initial?: Metric;
   @Output() metricsSelected = new EventEmitter<Metric[]>();
   actionControl = new FormControl();
 
@@ -38,6 +39,7 @@ export class PaceEntryComponent implements OnInit {
       this.matchUnitOf$ = of([]);
     }
     this.enteredMetrics$ = this.actionControl.valueChanges.pipe(
+        tap(value => console.log(value)),
         tap(() => this.metricsSelected.next([])),
         filter(text => {
           if (typeof text !== 'string') {
@@ -94,5 +96,13 @@ export class PaceEntryComponent implements OnInit {
                 selectResult(this.metricsSelected),
                 map(result => result.results),
             );
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => {  // setTimeout to avoid ChangedAfterItHasBeenChecked.
+      if (this.initial) {
+        this.actionControl.setValue(this.initial.toString());
+      }
+    }, 0);
   }
 }

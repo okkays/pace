@@ -2,6 +2,7 @@
   <div class="input-wrapper">
     <div class="pace-entry">
       <app-pace-entry
+        [initial]="initialFrom"
         (metricsSelected)="fromSubject$.next($event)"
         label="from" placeholder="5 kph"></app-pace-entry>
       <app-pace-entry
