@@ -1,5 +1,5 @@
 import {Clipboard} from '@angular/cdk/clipboard';
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {combineLatest, Observable, ReplaySubject} from 'rxjs';
 import {map, shareReplay, startWith, tap} from 'rxjs/operators';
@@ -11,7 +11,8 @@ import {Metric} from '../models/metric';
 @Component({
   selector: 'app-conversion-entry',
   templateUrl: './conversion-entry.component.html',
-  styleUrls: ['./conversion-entry.component.css']
+  styleUrls: ['./conversion-entry.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConversionEntryComponent {
   @Output() conversionSelected = new EventEmitter<Metric>();
@@ -22,7 +23,14 @@ export class ConversionEntryComponent {
   toSubject$ = new ReplaySubject<Metric[]>(1);
   forOrAtSubject$ = new ReplaySubject<Metric[]>(1);
 
-  suggest = suggest;  // Expose to template
+  suggest(metric: Metric): Array<{metric: Metric, index: number}> {
+    return suggest(metric).map((metric, index) => ({metric, index}));
+  }
+
+  /** For use with trackBy. */
+  getIndex(index: number, item: {index: number}): number {
+    return item.index;
+  }
 
   forOrAtCompliment$: Observable<Metric[]> = this.fromSubject$.pipe(
       map(fromMetrics => fromMetrics.map(compliment).flat()));

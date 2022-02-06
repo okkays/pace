@@ -57,10 +57,10 @@
       <mat-icon>content_copy</mat-icon>
       <span>Copy to Clipboard</span>
     </button>
-    <button *ngFor="let suggestion of suggest(result)"
-      (click)="selectConversion(suggestion)" mat-menu-item>
+    <button *ngFor="let suggestion of suggest(result); trackBy getIndex"
+      (click)="selectConversion(suggestion.metric)" mat-menu-item>
       <mat-icon>auto_awesome</mat-icon>
-      <span>{{suggestion}}</span>
+      <span>{{suggestion.metric}}</span>
     </button>
   </mat-menu>
 </ng-template>

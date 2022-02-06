@@ -1,6 +1,6 @@
 import {Distance} from './distance';
 import {Duration} from './duration';
-import {InvalidMetric, Metric} from './metric';
+import {assertValid, InvalidMetric, Metric} from './metric';
 import {Pace} from './pace';
 
 /** Produces the "effort" by doing left for/at right */
@@ -72,5 +72,23 @@ export function compliment(metric: Metric): Metric[] {
  * Follows the good UX advice of trying to read the user's mind.
  */
 export function suggest(metric: Metric): Metric[] {
-  return [metric];
+  if (metric instanceof Distance) return suggestForDistance(metric);
+  if (metric instanceof Duration) return suggestForDuration(metric);
+  if (metric instanceof Pace) return suggestForPace(metric);
+  return [];
+}
+
+function suggestForDistance(metric: Distance): Metric[] {
+  if (metric.unit === 'kilometer') {
+    return [metric.toUnit('mile')].map(assertValid);
+  }
+  return [];
+}
+
+function suggestForDuration(metric: Duration): Metric[] {
+  return [];
+}
+
+function suggestForPace(metric: Pace): Metric[] {
+  return [];
 }
