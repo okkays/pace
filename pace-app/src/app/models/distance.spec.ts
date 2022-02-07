@@ -25,6 +25,11 @@ describe('Distance', () => {
     expect(parseDistance('3 fts')).toEqual(new Distance(3, 'foot'));
     expect(parseDistance('3 foot')).toEqual(new Distance(3, 'foot'));
     expect(parseDistance('3 feet')).toEqual(new Distance(3, 'foot'));
+
+    expect(parseDistance('3 marathon')).toEqual(new Distance(3, 'marathon'));
+    expect(parseDistance('3 marathons')).toEqual(new Distance(3, 'marathon'));
+    expect(parseDistance('3 century')).toEqual(new Distance(3, 'century'));
+    expect(parseDistance('3 centuries')).toEqual(new Distance(3, 'century'));
   });
 
   it('Should handle invalid units', () => {
@@ -41,6 +46,7 @@ describe('Distance', () => {
     expect(fromDistance.toUnit('foot').value).toBeCloseTo(3, 1);
     expect(fromDistance.toUnit('kilometer').value).toBeCloseTo(0.0009, 4);
     expect(fromDistance.toUnit('mile').value).toBeCloseTo(0.001, 3);
+    expect(fromDistance.toUnit('century').value).toBeCloseTo(3 / 528000, 10);
   });
 
   it('Should convert distance units', () => {
@@ -49,5 +55,6 @@ describe('Distance', () => {
     expect(fromDistance.toUnit('foot').unit).toBe('foot');
     expect(fromDistance.toUnit('kilometer').unit).toBe('kilometer');
     expect(fromDistance.toUnit('mile').unit).toBe('mile');
+    expect(fromDistance.toUnit('century').unit).toBe('century');
   });
 });

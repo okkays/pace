@@ -14,8 +14,8 @@ See it at https://okkays.github.io/pace
     - [ ] half
     - [ ] full
   - Including named race distances:
-    - [ ] marathon
-    - [ ] century
+    - [x] marathon
+    - [x] century
 - Recognize and convert durations:
   - [x] hour(s)
   - [x] minute(s)

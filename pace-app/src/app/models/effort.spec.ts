@@ -63,6 +63,8 @@ describe('suggestFromGroups', () => {
     const baseMetric = assertValid(parseDistance('5 km'));
     expect(suggest(baseMetric)).toEqual([
       assertValid(baseMetric.toUnit('mile')),
+      assertValid(baseMetric.toUnit('marathon')),
+      assertValid(baseMetric.toUnit('century')),
       assertValid(baseMetric.toUnit('meter')),
     ]);
   });

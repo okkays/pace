@@ -81,7 +81,7 @@ export const SUGGESTION_GROUPS = [
   ['mile/hour', 'kilometer/hour', 'minute/mile', 'minute/kilometer'],
 
   // Distance
-  ['kilometer', 'mile'],
+  ['kilometer', 'mile', 'marathon', 'century'],
   ['kilometer', 'meter'],
   ['mile', 'foot'],
 
