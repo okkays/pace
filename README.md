@@ -10,7 +10,7 @@ See it at https://okkays.github.io/pace
   - [x] ft, feet, foot
   - [x] m, meter(s)
   - Including fractions:
-    - [ ] x/y, i.e. 1/2
+    - [x] x/y, i.e. 1/2
   - Including specifiers:
     - [x] quarter
     - [x] half
