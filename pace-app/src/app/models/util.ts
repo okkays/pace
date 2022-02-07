@@ -1,12 +1,12 @@
 function getSpecifier(metric: string): number|null {
-  if (metric.search(/^[\s\d\.\/]*full/) !== -1) return 1;
-  if (metric.search(/^[\s\d\.\/]*half/) !== -1) return 0.5;
-  if (metric.search(/^[\s\d\.\/]*quarter/) !== -1) return 0.25;
+  if (metric.search(/^[\s\d\.\/:]*full/) !== -1) return 1;
+  if (metric.search(/^[\s\d\.\/:]*half/) !== -1) return 0.5;
+  if (metric.search(/^[\s\d\.\/:]*quarter/) !== -1) return 0.25;
   return null;
 }
 
 export function getUnitText(metric: string): string {
-  return metric.replace(/^[\d\s\.\/]*(half|quarter|full)?\s*/, '');
+  return metric.replace(/^[\d\s\.\/:]*(half|quarter|full)?\s*/, '');
 }
 
 export function parseValue(metric: string): number|null {

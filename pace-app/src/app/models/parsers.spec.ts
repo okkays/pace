@@ -26,6 +26,13 @@ describe('parseMetrics', () => {
     (expect(metrics[0]) as any).toBeMetric(5, 'minute/mile');
   });
 
+  it('parses minute paces', () => {
+    const metrics = parseMetrics('12:00 minutes/kilometer') as Metric[];
+
+    expect(metrics.length).toBe(1);
+    (expect(metrics[0]) as any).toBeMetric(12, 'minute/kilometer');
+  });
+
   it('gets multiple metrics if ambiguous', () => {
     const metrics = parseMetrics('5 m') as Metric[];
 
