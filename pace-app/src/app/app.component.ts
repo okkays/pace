@@ -48,14 +48,21 @@ export class AppComponent implements AfterViewInit, OnDestroy {
                       currentElement => !previousElements.some(
                           previousElement =>
                               currentElement === previousElement));
+                  let element: HTMLElement|undefined = undefined;
                   if (addedElements.length) {
-                    const element =
+                    element =
                         addedElements[addedElements.length - 1].nativeElement;
-                    element.querySelector('input')?.focus();
-                    element.scrollIntoView(
+                  } else if (
+                      currentElements.length !== previousElements.length) {
+                    element = currentElements.last.nativeElement;
+                  }
+                  if (!element) return currentElements.toArray();
+                  setTimeout(() => {
+                    element?.querySelector('input')?.focus();
+                    element?.scrollIntoView(
                         {block: 'start', behavior: 'smooth'});
                     console.log('Element added, scrolling...');
-                  }
+                  }, 0);
                   return currentElements.toArray();
                 },
                 new Array<ElementRef<HTMLElement>>()),
