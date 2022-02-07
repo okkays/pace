@@ -5,6 +5,10 @@ function getSpecifier(metric: string): number|null {
   return null;
 }
 
+export function getUnitText(metric: string): string {
+  return metric.replace(/^[\d\s\.]*(half|quarter|full)?\s*/, '');
+}
+
 export function parseValue(metric: string): number|null {
   const digitsOnly = metric.replace(/[^\d\.]+/g, '');
   const specifier = getSpecifier(metric);

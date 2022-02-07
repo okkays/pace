@@ -1,4 +1,18 @@
-import {getHms, getMs, parseValue, round} from './util';
+import {getHms, getMs, getUnitText, parseValue, round} from './util';
+
+describe('getUnitText', () => {
+  it('should get unit texts', () => {
+    expect(getUnitText('full marathon')).toBe('marathon');
+    expect(getUnitText('half marathon')).toBe('marathon');
+    expect(getUnitText('quarter marathon')).toBe('marathon');
+    expect(getUnitText('2 full marathons')).toBe('marathons');
+    expect(getUnitText('2 half marathons')).toBe('marathons');
+    expect(getUnitText('2 quarter marathons')).toBe('marathons');
+    expect(getUnitText('2 marathons')).toBe('marathons');
+    expect(getUnitText('2 marathons')).toBe('marathons');
+    expect(getUnitText('2 marathons')).toBe('marathons');
+  });
+});
 
 describe('parseValue', () => {
   it('should read ints', () => {

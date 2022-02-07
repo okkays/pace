@@ -6,6 +6,7 @@ import {filter, startWith, takeUntil, tap} from 'rxjs/operators';
 import {getMetricOptions, searchOptions, selectResult} from '../models/autocomplete';
 import {InvalidMetric, Metric} from '../models/metric';
 import {parseMetrics} from '../models/parsers';
+import {getUnitText} from '../models/util';
 
 interface RawMetrics {
   text: string;
@@ -84,7 +85,7 @@ export class PaceEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         ])
             .pipe(
                 map(([{text, metrics}, matchMetrics]) => {
-                  const unitText = text.replace(/^[^A-Za-z]*/, '');
+                  const unitText = getUnitText(text);
                   const prefix = text.substr(0, text.length - unitText.length);
                   const options = (metrics instanceof InvalidMetric) ?
                       getMetricOptions(metrics, matchMetrics) :
