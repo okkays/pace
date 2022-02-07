@@ -100,6 +100,11 @@ describe('parsePace', () => {
     expect(assertValid(parsePace('5 mps')).right.unit).toBe('second');
   });
 
+  it('recognizes fractions', () => {
+    expect(assertValid(parsePace('1/2 kilometers/hour')))
+        .toEqual(assertValid(parsePace('0.5 kilometers/hour')));
+  });
+
   it('parses a two-valued pace', () => {
     (expect(parsePace('5 min/2 km')) as any)
         .toBeMetric(2.5, 'minute/kilometer');

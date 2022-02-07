@@ -1,7 +1,7 @@
 import {abbreviateDistance, Distance, DISTANCES, parseDistance, pluralizeDistance} from './distance';
 import {abbreviateDuration, Duration, DURATIONS, parseDuration, pluralizeDuration} from './duration';
 import {InvalidMetric, Metric} from './metric';
-import {getHms, getMs, round} from './util';
+import {getHms, getMs, getUnitText, round} from './util';
 
 type PaceMetric = Distance|Duration;
 
@@ -42,8 +42,9 @@ type Separator = '/'|' per '|'p';
 const P_REGEX = /^(?<value>[^A-Za-z]*)(?<distance>[km])p(?<duration>[wdhms])$/
 
 function getSeparator(rawPace: string): Separator|null {
-  if (rawPace.includes('/')) return '/';
-  if (rawPace.includes(' per ')) return ' per ';
+  const unitText = getUnitText(rawPace);
+  if (unitText.includes('/')) return '/';
+  if (unitText.includes(' per ')) return ' per ';
   return null;
 }
 
@@ -86,7 +87,10 @@ export function parsePace(rawPace: string): Pace|InvalidMetric {
   const separator = getSeparator(rawPace);
   if (separator === null) return new InvalidMetric(null, null);
 
-  const [left, right] = rawPace.split(separator, 2);
+
+  const left = rawPace.substring(0, rawPace.lastIndexOf(separator));
+  const right =
+      rawPace.substring(rawPace.lastIndexOf(separator) + 1, rawPace.length);
   // Because of the bit math below, the compiler can't tell if the following
   // are valid or invalid. We cast because we can tell:
   const leftAsDistance = parseDistance(left) as Distance;

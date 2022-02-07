@@ -1,17 +1,25 @@
 function getSpecifier(metric: string): number|null {
-  if (metric.search(/^[\s\d]*full/) !== -1) return 1;
-  if (metric.search(/^[\s\d]*half/) !== -1) return 0.5;
-  if (metric.search(/^[\s\d]*quarter/) !== -1) return 0.25;
+  if (metric.search(/^[\s\d\.\/]*full/) !== -1) return 1;
+  if (metric.search(/^[\s\d\.\/]*half/) !== -1) return 0.5;
+  if (metric.search(/^[\s\d\.\/]*quarter/) !== -1) return 0.25;
   return null;
 }
 
 export function getUnitText(metric: string): string {
-  return metric.replace(/^[\d\s\.]*(half|quarter|full)?\s*/, '');
+  return metric.replace(/^[\d\s\.\/]*(half|quarter|full)?\s*/, '');
 }
 
 export function parseValue(metric: string): number|null {
-  const digitsOnly = metric.replace(/[^\d\.]+/g, '');
+  const digitsOnly = metric.replace(/[^\d\.\/]+/g, '');
   const specifier = getSpecifier(metric);
+
+  if (digitsOnly.includes('/')) {
+    const fraction = digitsOnly.split('/');
+    if (fraction.length !== 2) return null;
+    const [left, right] = fraction.map(Number);
+    if (isNaN(left) || isNaN(right)) return null;
+    return (left / right) * (specifier || 1);
+  }
 
   if (!digitsOnly) {
     if (specifier !== null) return specifier;

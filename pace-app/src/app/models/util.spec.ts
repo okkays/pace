@@ -11,6 +11,7 @@ describe('getUnitText', () => {
     expect(getUnitText('2 marathons')).toBe('marathons');
     expect(getUnitText('2 marathons')).toBe('marathons');
     expect(getUnitText('2 marathons')).toBe('marathons');
+    expect(getUnitText('1/2 marathons')).toBe('marathons');
   });
 });
 
@@ -33,6 +34,17 @@ describe('parseValue', () => {
 
   it('should fail with no digits', () => {
     expect(parseValue('foo')).toBeNull();
+  });
+
+  it('should read fractions', () => {
+    expect(parseValue('3/2')).toBe(1.5);
+    expect(parseValue('1/2')).toBe(0.5);
+    expect(parseValue('1.5/2.5')).toBe(1.5 / 2.5);
+    expect(parseValue('1.5.5/2.5')).toBeNull();
+    expect(parseValue('1.5/2.5.5')).toBeNull();
+    expect(parseValue('3/2 half marathons')).toBe(3 / 2 / 2);
+    expect(parseValue('1/2 half marathons')).toBe(1 / 2 / 2);
+    expect(parseValue('1.5/2.5 half marathons')).toBe(1.5 / 2.5 / 2);
   });
 
   it('should read special values', () => {
