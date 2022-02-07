@@ -9,10 +9,12 @@ See it at https://okkays.github.io/pace
   - [x] km, kilometer(s)
   - [x] ft, feet, foot
   - [x] m, meter(s)
+  - Including fractions:
+    - [ ] x/y, i.e. 1/2
   - Including specifiers:
-    - [ ] quarter
-    - [ ] half
-    - [ ] full
+    - [x] quarter
+    - [x] half
+    - [x] full
   - Including named race distances:
     - [x] marathon
     - [x] century

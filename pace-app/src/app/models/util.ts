@@ -1,9 +1,23 @@
+function getSpecifier(metric: string): number|null {
+  if (metric.search(/^[\s\d]*full/) !== -1) return 1;
+  if (metric.search(/^[\s\d]*half/) !== -1) return 0.5;
+  if (metric.search(/^[\s\d]*quarter/) !== -1) return 0.25;
+  return null;
+}
+
 export function parseValue(metric: string): number|null {
   const digitsOnly = metric.replace(/[^\d\.]+/g, '');
-  if (!digitsOnly) return null;
+  const specifier = getSpecifier(metric);
+
+  if (!digitsOnly) {
+    if (specifier !== null) return specifier;
+    return null;
+  }
   const parsed = Number(digitsOnly);
-  if (isNaN(parsed)) return null;
-  return parsed;
+  if (isNaN(parsed)) {
+    return null;
+  }
+  return parsed * (specifier || 1);
 }
 
 export function getHms(minutes: number): string {

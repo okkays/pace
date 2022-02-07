@@ -20,6 +20,15 @@ describe('parseValue', () => {
   it('should fail with no digits', () => {
     expect(parseValue('foo')).toBeNull();
   });
+
+  it('should read special values', () => {
+    expect(parseValue('full marathon')).toBe(1);
+    expect(parseValue('half marathon')).toBe(0.5);
+    expect(parseValue('quarter marathon')).toBe(0.25);
+    expect(parseValue('2 full marathon')).toBe(2);
+    expect(parseValue('2 half marathon')).toBe(1);
+    expect(parseValue('2 quarter marathon')).toBe(0.5);
+  });
 });
 
 describe('getMs', () => {
