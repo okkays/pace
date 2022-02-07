@@ -1,7 +1,7 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {combineLatest, map, Observable, of} from 'rxjs';
-import {filter, startWith, tap} from 'rxjs/operators';
+import {combineLatest, map, Observable, of, Subject} from 'rxjs';
+import {filter, startWith, takeUntil, tap} from 'rxjs/operators';
 
 import {getMetricOptions, searchOptions, selectResult} from '../models/autocomplete';
 import {InvalidMetric, Metric} from '../models/metric';
@@ -17,20 +17,33 @@ interface RawMetrics {
   templateUrl: './pace-entry.component.html',
   styleUrls: ['./pace-entry.component.css']
 })
-export class PaceEntryComponent implements OnInit, AfterViewInit {
+export class PaceEntryComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() label: string = 'Pace';
   @Input() placeholder: string = '5 kph';
   @Input() matchUnitOf$!: Observable<Metric[]>;
   @Input() allowValues: boolean = true;
   @Input() requireValues: boolean = false;
   @Input() initial?: Metric;
+  @Input() reset$!: Observable<void>;
   @Output() metricsSelected = new EventEmitter<Metric[]>();
   actionControl = new FormControl();
 
   filteredOptions$!: Observable<string[]>;
   enteredMetrics$!: Observable<RawMetrics>;
 
+  destroySubject$ = new Subject<void>();
+
+  ngOnDestroy(): void {
+    this.destroySubject$.next();
+  }
+
   ngOnInit(): void {
+    if (!this.reset$) this.reset$ = of();
+    this.reset$
+        .pipe(
+            takeUntil(this.destroySubject$),
+            tap(() => this.actionControl.setValue('')))
+        .subscribe();  // Direct call to subscribe to interact with formControl
     if (!this.allowValues && this.requireValues) {
       throw new Error(
           'allowValues cannot be false while requireValues is true');

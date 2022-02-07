@@ -3,14 +3,17 @@
     <div class="pace-entry">
       <app-pace-entry
         [initial]="initialFrom"
+        [reset$]="resetSubject$"
         (metricsSelected)="fromSubject$.next($event)"
         label="from" placeholder="e.g. 5 kph"></app-pace-entry>
       <app-pace-entry
+        [reset$]="resetSubject$"
         (metricsSelected)="toSubject$.next($event)"
         [allowValues]="false"
         [matchUnitOf$]="fromSubject$"
         label="to" placeholder="e.g. min/mi"></app-pace-entry>
       <app-pace-entry
+        [reset$]="resetSubject$"
         (metricsSelected)="forOrAtSubject$.next($event)"
         [requireValues]="true"
         [matchUnitOf$]="forOrAtCompliment$"
@@ -28,11 +31,11 @@
     </ng-container>
 
     <div class="cancel">
-      <button *ngIf="!!initialFrom" (click)="cancelClicked.emit()"
+      <button *ngIf="deleteRemoves" (click)="cancelClicked.emit()"
           mat-raised-button>
         <mat-icon>delete</mat-icon>
       </button>
-      <button *ngIf="!initialFrom" disabled mat-raised-button>
+      <button *ngIf="!deleteRemoves" (click)="this.resetSubject$.next()" mat-raised-button>
         <mat-icon>delete</mat-icon>
       </button>
     </div>

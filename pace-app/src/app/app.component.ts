@@ -11,7 +11,7 @@ import {Metric} from './models/metric';
 })
 export class AppComponent implements AfterViewInit, OnDestroy {
   conversionsSubject = new Subject<Metric>();
-  deletedSubject = new Subject<Metric>();
+  deletedSubject = new Subject<Metric|null>();
   destroySubject = new Subject<void>();
   @ViewChildren('conversion', {read: ElementRef})
   conversionElements!: QueryList<ElementRef>;
@@ -22,10 +22,12 @@ export class AppComponent implements AfterViewInit, OnDestroy {
           this.deletedSubject.pipe(map(deleted => ({deleted}))),
           )
           .pipe(
-              scan<{deleted?: Metric, added?: Metric|null}, Array<Metric|null>>(
+              scan<
+                  {deleted?: Metric | null, added?: Metric|null},
+                  Array<Metric|null>>(
                   (conversions, {added, deleted}) => {
                     if (added) return [...conversions, added.clone()];
-                    if (deleted) {
+                    if (deleted !== undefined) {
                       return conversions.filter(
                           conversion => !Object.is(deleted, conversion));
                     }
@@ -58,7 +60,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
                 },
                 new Array<ElementRef<HTMLElement>>()),
             takeUntil(this.destroySubject))
-        .subscribe();
+        .subscribe();  // Direct call to subscribe to perform scroll actions.
   }
 
   ngOnDestroy(): void {

@@ -7,9 +7,10 @@
 </mat-card>
 
 <app-conversion-entry
-  *ngFor="let conversion of conversions$ | async"
+  *ngFor="let conversion of conversions$ | async; let conversionCount = count"
   #conversion
   [initialFrom]="conversion || undefined"
+  [deleteRemoves]="conversionCount > 1"
   (conversionSelected)="conversionsSubject.next($event)"
-  (cancelClicked)="!conversion || deletedSubject.next(conversion)">
+  (cancelClicked)="deletedSubject.next(conversion)">
 </app-conversion-entry>

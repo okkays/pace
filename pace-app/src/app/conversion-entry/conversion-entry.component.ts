@@ -1,7 +1,7 @@
 import {Clipboard} from '@angular/cdk/clipboard';
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {combineLatest, Observable, ReplaySubject} from 'rxjs';
+import {combineLatest, Observable, ReplaySubject, Subject} from 'rxjs';
 import {map, shareReplay, startWith, tap} from 'rxjs/operators';
 
 import {Action} from '../models/action';
@@ -18,10 +18,12 @@ export class ConversionEntryComponent {
   @Output() conversionSelected = new EventEmitter<Metric>();
   @Output() cancelClicked = new EventEmitter<void>();
   @Input() initialFrom?: Metric;
+  @Input() deleteRemoves?: boolean;
   actionSelected$ = new ReplaySubject<Action>(1);
   fromSubject$ = new ReplaySubject<Metric[]>(1);
   toSubject$ = new ReplaySubject<Metric[]>(1);
   forOrAtSubject$ = new ReplaySubject<Metric[]>(1);
+  resetSubject$ = new Subject<void>();
 
   suggest(metric: Metric): Array<{metric: Metric, index: number}> {
     return suggest(metric).map((metric, index) => ({metric, index}));
