@@ -3,6 +3,7 @@
     <div class="pace-entry">
       <app-pace-entry
         [initial]="initialFrom"
+        [requireValues]="true"
         [reset$]="resetSubject$"
         (metricsSelected)="fromSubject$.next($event)"
         label="from" placeholder="e.g. 5 kph"></app-pace-entry>
