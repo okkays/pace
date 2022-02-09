@@ -54,6 +54,7 @@ export class PaceEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     this.enteredMetrics$ = this.actionControl.valueChanges.pipe(
         tap(() => this.metricsSelected.next([])),
+        map(value => value.trim()),
         filter(text => {
           if (typeof text !== 'string') {
             return false;
