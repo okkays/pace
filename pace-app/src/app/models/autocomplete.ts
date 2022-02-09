@@ -24,7 +24,7 @@ export function getMetricOptions(
     options.push(...getPaceOptions());
   }
 
-  return options;
+  return [...new Set(options)];
 }
 
 function getDistanceOptions(): string[] {

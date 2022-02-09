@@ -19,7 +19,6 @@ describe('Duration', () => {
 
     expect(parseDuration('0 minute')).toEqual(new Duration(0, 'minute'));
     expect(parseDuration('0 min')).toEqual(new Duration(0, 'minute'));
-    expect(parseDuration('0 m')).toEqual(new Duration(0, 'minute'));
     expect(parseDuration('0 minutes')).toEqual(new Duration(0, 'minute'));
     expect(parseDuration('0 mins')).toEqual(new Duration(0, 'minute'));
 

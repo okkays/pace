@@ -141,6 +141,7 @@ describe('PaceEntryComponent', () => {
 
     expect(await getOptionTexts(await harness.getOptions())).toEqual([
       'mi',
+      'mile',
       'miles',
     ]);
   });
@@ -152,9 +153,10 @@ describe('PaceEntryComponent', () => {
     await harness.enterText('m');
 
     expect(await getOptionTexts(await harness.getOptions())).toEqual([
-      'minutes',
+      'minute',
       'min',
-      'm',
+      'month',
+      'minutes',
       'months',
     ]);
   });

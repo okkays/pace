@@ -12,7 +12,7 @@ export const DURATIONS = [
 
 const ABBREVIATIONS: Record<DurationUnit, string[]> = {
   'second': ['second', 'sec', 's'],
-  'minute': ['minute', 'min', 'm'],
+  'minute': ['minute', 'min'],
   'hour': ['hour', 'hr', 'h'],
   'day': ['d', 'day'],
   'week': ['week', 'wk', 'w'],
@@ -30,7 +30,7 @@ export function depluralizeDuration(metric: string): string {
 }
 
 export function pluralizeDuration(metric: string): string {
-  if (['w', 'h', 'd', 's', 'm', 'min'].includes(metric)) return metric;
+  if (['w', 'h', 'd', 's', 'min'].includes(metric)) return metric;
   return metric + 's';
 }
 
