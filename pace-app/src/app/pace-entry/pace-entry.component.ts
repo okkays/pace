@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {combineLatest, map, Observable, of, Subject} from 'rxjs';
-import {filter, startWith, takeUntil, tap} from 'rxjs/operators';
+import {combineLatest, map, Observable, of, OperatorFunction, pipe, Subject} from 'rxjs';
+import {concatMap, concatWith, filter, mapTo, mergeWith, startWith, takeUntil, tap} from 'rxjs/operators';
 
 import {getMetricOptions, searchOptions, selectResult} from '../models/autocomplete';
 import {InvalidMetric, Metric} from '../models/metric';
@@ -38,6 +38,54 @@ export class PaceEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     this.destroySubject$.next();
   }
 
+  private sanitizeMetricText: OperatorFunction<string, string> = pipe(
+      map(value => value.trim()),
+      map(text => {
+        if (text.match(/^[^A-Za-z0-9]+/)) {
+          const textWithoutGarbage = text.replace(/^[^A-Za-z0-9]+/g, '');
+          this.actionControl.setValue(textWithoutGarbage);
+          return textWithoutGarbage;
+        }
+        if (text.match(/\d+/)) {
+          if (!this.allowValues) {
+            const valueless = text.replace(/\d+/g, '');
+            this.actionControl.setValue(valueless);
+            return valueless;
+          }
+        } else if (this.requireValues && text.search(/[a-zA-Z]+/) !== -1) {
+          const oneValue = `1 ${text}`;
+          this.actionControl.setValue(oneValue);
+          return oneValue;
+        }
+        return text;
+      }),
+  );
+
+  private validateMetricText: OperatorFunction<string, string> = pipe(
+      filter(text => {
+        if (typeof text !== 'string' || !text) {
+          return false;
+        }
+        if (text.match(/\d+/)) {
+          if (!this.allowValues) {
+            return false;
+          }
+        } else if (this.requireValues) {
+          return false;
+        }
+        return true;
+      }),
+  );
+
+  private parseMetricsFromText: OperatorFunction<string, RawMetrics> = pipe(
+      map(text => {
+        return {
+          text,
+          metrics: parseMetrics(text),
+        };
+      }),
+  )
+
   ngOnInit(): void {
     if (!this.reset$) this.reset$ = of();
     this.reset$
@@ -53,46 +101,9 @@ export class PaceEntryComponent implements OnInit, OnDestroy, AfterViewInit {
       this.matchUnitOf$ = of([]);
     }
     this.enteredMetrics$ = this.actionControl.valueChanges.pipe(
-        tap(() => this.metricsSelected.next([])),
-        map(value => value.trim()),
-        map(text => {
-          if (text.match(/^[^A-Za-z0-9]+/)) {
-            const textWithoutGarbage = text.replace(/^[^A-Za-z0-9]+/g, '');
-            this.actionControl.setValue(textWithoutGarbage);
-            return textWithoutGarbage;
-          }
-          if (text.match(/\d+/)) {
-            if (!this.allowValues) {
-              const valueless = text.replace(/\d+/g, '');
-              this.actionControl.setValue(valueless);
-              return valueless;
-            }
-          } else if (this.requireValues && text.search(/[a-zA-Z]+/) !== -1) {
-            const oneValue = `1 ${text}`;
-            this.actionControl.setValue(oneValue);
-            return oneValue;
-          }
-          return text;
-        }),
-        filter(text => {
-          if (typeof text !== 'string' || !text) {
-            return false;
-          }
-          if (text.match(/\d+/)) {
-            if (!this.allowValues) {
-              return false;
-            }
-          } else if (this.requireValues) {
-            return false;
-          }
-          return true;
-        }),
-        map(text => {
-          return {
-            text,
-            metrics: parseMetrics(text),
-          };
-        }),
+        this.sanitizeMetricText,
+        this.validateMetricText,
+        this.parseMetricsFromText,
     );
 
     this.filteredOptions$ =

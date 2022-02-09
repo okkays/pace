@@ -18,7 +18,7 @@
         (metricsSelected)="forOrAtSubject$.next($event)"
         [requireValues]="true"
         [matchUnitOf$]="forOrAtCompliment$"
-        label="for/at/in" placeholder="e.g. 6 hours"></app-pace-entry>
+        label="for/at/in" placeholder="e.g. 6 hours, 5 km, 8 min/mi"></app-pace-entry>
     </div>
 
     <ng-container *ngIf="convertedMetric$ | async as result">

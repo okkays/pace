@@ -1,14 +1,15 @@
 import {MatAutocompleteHarness} from '@angular/material/autocomplete/testing';
 import {MatOptionHarness} from '@angular/material/core/testing';
-import {firstValueFrom, lastValueFrom, of} from 'rxjs';
-import {shareReplay, take, takeWhile} from 'rxjs/operators';
+import {lastValueFrom, of} from 'rxjs';
+import {shareReplay, takeWhile} from 'rxjs/operators';
 
 import {createTestEnvironment, setupModule} from '../component-testing-util';
 import {parseDistance} from '../models/distance';
 import {parseDuration} from '../models/duration';
-import {parsePace} from '../models/pace';
 
 import {PaceEntryComponent} from './pace-entry.component';
+
+
 
 async function getPaceState(componentInputs?: Record<string, unknown>) {
   const {fixture, loader} =
