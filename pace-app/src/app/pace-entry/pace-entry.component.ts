@@ -104,10 +104,7 @@ export class PaceEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 map(([{text, metrics}, matchMetrics]) => {
                   const unitText = getUnitText(text);
                   const prefix = text.substr(0, text.length - unitText.length);
-                  const options = (metrics instanceof InvalidMetric) ?
-                      getMetricOptions(metrics, matchMetrics) :
-                      metrics.flatMap(
-                          metric => getMetricOptions(metric, matchMetrics));
+                  const options = getMetricOptions(matchMetrics);
 
                   return {
                     prefix,

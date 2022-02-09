@@ -124,7 +124,6 @@ function parseUnit(metric: string): DurationUnit|null {
 
   if (metric.match(/^[^A-Za-z]*minutes?$/)) return 'minute';
   if (metric.match(/^[^A-Za-z]*mins?$/)) return 'minute';
-  if (metric.match(/^[^A-Za-z]*m$/)) return 'minute';
 
   if (metric.match(/^[^A-Za-z]*hours?$/)) return 'hour';
   if (metric.match(/^[^A-Za-z]*hrs?$/)) return 'hour';

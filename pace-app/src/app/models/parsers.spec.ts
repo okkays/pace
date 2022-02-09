@@ -33,14 +33,6 @@ describe('parseMetrics', () => {
     (expect(metrics[0]) as any).toBeMetric(12, 'minute/kilometer');
   });
 
-  it('gets multiple metrics if ambiguous', () => {
-    const metrics = parseMetrics('5 m') as Metric[];
-
-    expect(metrics.length).toBe(2);
-    (expect(metrics[0]) as any).toBeMetric(5, 'meter');
-    (expect(metrics[1]) as any).toBeMetric(5, 'minute');
-  });
-
   it('lets invalid metrics fall through', () => {
     (expect(parseMetrics('5 foo')) as any).toBeInvalidMetric(5, null);
   });

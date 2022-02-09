@@ -68,7 +68,7 @@ function parseSpecialPace(rawPace: string): Pace|InvalidMetric {
   if (!distance.isValid()) return new InvalidMetric(null, null);
 
   const rawDuration = pGroups['duration'];
-  const duration = parseDuration(rawDuration);
+  const duration = parseDuration(rawDuration === 'm' ? 'minute' : rawDuration);
   if (!duration.isValid()) return new InvalidMetric(null, null);
 
   return new Pace(distance, 'p', duration);

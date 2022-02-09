@@ -3,20 +3,17 @@ import {map, MonoTypeOperatorFunction, OperatorFunction, pipe, tap} from 'rxjs';
 
 import {abbreviateDistance, Distance, DISTANCES, pluralizeDistance} from './distance';
 import {abbreviateDuration, Duration, DURATIONS, pluralizeDuration} from './duration';
-import {InvalidMetric, Metric} from './metric';
+import {Metric} from './metric';
 import {Pace, PACES, pluralizePace} from './pace';
 
-export function getMetricOptions(
-    metric: Metric|InvalidMetric, matchMetrics: Metric[]): string[] {
+export function getMetricOptions(matchMetrics: Metric[]): string[] {
   const options = [];
-  if ((!metric.isValid() || metric instanceof Distance) &&
-      (!matchMetrics.length ||
-       matchMetrics.some(match => match instanceof Distance))) {
+  if (!matchMetrics.length ||
+      matchMetrics.some(match => match instanceof Distance)) {
     options.push(...getDistanceOptions());
   }
-  if ((!metric.isValid() || metric instanceof Duration) &&
-      (!matchMetrics.length ||
-       matchMetrics.some(match => match instanceof Duration))) {
+  if (!matchMetrics.length ||
+      matchMetrics.some(match => match instanceof Duration)) {
     options.push(...getDurationOptions());
   }
   if (!matchMetrics.length ||
