@@ -55,19 +55,30 @@ export class PaceEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     this.enteredMetrics$ = this.actionControl.valueChanges.pipe(
         tap(() => this.metricsSelected.next([])),
         map(value => value.trim()),
+        map(text => {
+          if (text.match(/\d+/)) {
+            if (!this.allowValues) {
+              const valueless = text.replace(/\d+/g, '');
+              this.actionControl.setValue(valueless);
+              return valueless;
+            }
+          } else if (this.requireValues && text.search(/[a-zA-Z]+/) !== -1) {
+            const oneValue = `1 ${text}`;
+            this.actionControl.setValue(oneValue);
+            return oneValue;
+          }
+          return text;
+        }),
         filter(text => {
-          if (typeof text !== 'string') {
+          if (typeof text !== 'string' || !text) {
             return false;
           }
           if (text.match(/\d+/)) {
             if (!this.allowValues) {
-              this.actionControl.setValue(text.replace(/\d+/g, ''));
               return false;
             }
-          } else {
-            if (this.requireValues) {
-              return false;
-            }
+          } else if (this.requireValues) {
+            return false;
           }
           return true;
         }),
