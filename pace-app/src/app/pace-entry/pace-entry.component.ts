@@ -56,6 +56,11 @@ export class PaceEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         tap(() => this.metricsSelected.next([])),
         map(value => value.trim()),
         map(text => {
+          if (text.match(/^[^A-Za-z0-9]+/)) {
+            const textWithoutGarbage = text.replace(/^[^A-Za-z0-9]+/g, '');
+            this.actionControl.setValue(textWithoutGarbage);
+            return textWithoutGarbage;
+          }
           if (text.match(/\d+/)) {
             if (!this.allowValues) {
               const valueless = text.replace(/\d+/g, '');
