@@ -12,51 +12,42 @@ export function getMetricOptions(
   if ((!metric.isValid() || metric instanceof Distance) &&
       (!matchMetrics.length ||
        matchMetrics.some(match => match instanceof Distance))) {
-    options.push(...getDistanceOptions(metric));
+    options.push(...getDistanceOptions());
   }
   if ((!metric.isValid() || metric instanceof Duration) &&
       (!matchMetrics.length ||
        matchMetrics.some(match => match instanceof Duration))) {
-    options.push(...getDurationOptions(metric));
+    options.push(...getDurationOptions());
   }
   if (!matchMetrics.length ||
       matchMetrics.some(match => match instanceof Pace)) {
-    options.push(...getPaceOptions(metric));
+    options.push(...getPaceOptions());
   }
 
   return options;
 }
 
-function getDistanceOptions(metric: Distance|InvalidMetric): string[] {
+function getDistanceOptions(): string[] {
   const distances = DISTANCES.flatMap(abbreviateDistance);
 
-  if (metric.isPlural()) {
-    return distances.map(distance => pluralizeDistance(distance));
-  }
-  return [...distances];
+  return [...distances, ...distances.map(pluralizeDistance)];
 }
 
-function getDurationOptions(metric: Duration|InvalidMetric): string[] {
+function getDurationOptions(): string[] {
   const durations = DURATIONS.flatMap(abbreviateDuration);
 
-  if (metric.isPlural()) {
-    return durations.map(duration => pluralizeDuration(duration));
-  }
-  return [...durations];
+  return [...durations, ...durations.map(pluralizeDuration)];
 }
 
-function getPaceOptions(metric: Pace|InvalidMetric): string[] {
-  if (metric.isPlural()) {
-    const pluralPaces: string[] = [];
-    for (const pace of PACES) {
-      const pluralPace = pluralizePace(pace)
-      if (pluralPace === null) continue;
-      pluralPaces.push(pluralPace);
-    }
-    return pluralPaces;
+function getPaceOptions(): string[] {
+  const pluralPaces: string[] = [];
+  for (const pace of PACES) {
+    const pluralPace = pluralizePace(pace)
+    if (pluralPace === null) continue;
+    pluralPaces.push(pluralPace);
   }
 
-  return [...PACES];
+  return [...PACES, ...pluralPaces];
 }
 
 export interface SearchArgs<T = string> {
