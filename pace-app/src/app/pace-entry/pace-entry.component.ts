@@ -61,22 +61,6 @@ export class PaceEntryComponent implements OnInit, OnDestroy, AfterViewInit {
       }),
   );
 
-  private validateMetricText: OperatorFunction<string, string> = pipe(
-      filter(text => {
-        if (typeof text !== 'string' || !text) {
-          return false;
-        }
-        if (text.match(/\d+/)) {
-          if (!this.allowValues) {
-            return false;
-          }
-        } else if (this.requireValues) {
-          return false;
-        }
-        return true;
-      }),
-  );
-
   private parseMetricsFromText: OperatorFunction<string, RawMetrics> = pipe(
       map(text => {
         return {
@@ -102,7 +86,6 @@ export class PaceEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     this.enteredMetrics$ = this.actionControl.valueChanges.pipe(
         this.sanitizeMetricText,
-        this.validateMetricText,
         this.parseMetricsFromText,
     );
 
@@ -127,6 +110,11 @@ export class PaceEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                   };
                 }),
                 searchOptions(),
+                tap(searched => {
+                  if (!searched.selectedItemAsString) {
+                    this.metricsSelected.next([]);
+                  }
+                }),
                 map(searched => {
                   return {...searched, results: searched.results.slice(0, 50)};
                 }),
