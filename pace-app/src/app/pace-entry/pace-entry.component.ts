@@ -111,7 +111,8 @@ export class PaceEntryComponent implements OnInit, OnDestroy, AfterViewInit {
                 }),
                 searchOptions(),
                 tap(searched => {
-                  if (!searched.selectedItemAsString) {
+                  if (!searched.selectedItemAsString ||
+                      !searched.results.length) {
                     this.metricsSelected.next([]);
                   }
                 }),
