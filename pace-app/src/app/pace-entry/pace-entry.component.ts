@@ -52,7 +52,9 @@ export class PaceEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             this.actionControl.setValue(valueless);
             return valueless;
           }
-        } else if (this.requireValues && text.search(/[a-zA-Z]+/) !== -1) {
+        } else if (
+            this.requireValues && text.search(/[a-zA-Z]+/) !== -1 &&
+            text.length === 1) {
           const oneValue = `1 ${text}`;
           this.actionControl.setValue(oneValue);
           return oneValue;
