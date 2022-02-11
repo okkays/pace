@@ -70,8 +70,8 @@ export function searchOptions<T = undefined>():
   return pipe(
       map(({prefix, term, options, selectedItem, selectedItemAsString}) => {
         const lowerTerm = term.toLowerCase();
-        const filteredOptions =
-            options.filter(option => option.toLowerCase().includes(lowerTerm));
+        const filteredOptions = options.filter(
+            option => option.toLowerCase().startsWith(lowerTerm));
         return {
           options: filteredOptions,
           prefix,
